@@ -96,9 +96,9 @@ app.get("/me", auth, async (req, res) => {
 app.post("/tasks", auth, async (req, res) => {
   const { title, description, priority, type } = req.body;
   const userId = req.userId; // auth middleware'den gelen userId
-
+  const _id = makeid(15);
   console.log("UserID from middleware:", userId); // Debug log
-  const task = new Task({ title, description, priority, type, userId });
+  const task = new Task({ _id, title, description, priority, type, userId });
 
   try {
     await task.save();
@@ -112,11 +112,65 @@ app.post("/tasks", auth, async (req, res) => {
 
 // Kullanıcıya özel iş listesi (Get User Tasks)
 app.get("/tasks", auth, async (req, res) => {
-  const userId = req.userId; // auth middleware'den gelen userId
+  try {
+    const tasks = await Task.find({ userId: req.userId }).sort({
+      priority: 1, // Önceliğe göre sıralama (High, Medium, Low)
+    });
+    res.send(tasks);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+// Görev silme (Delete Task)
+app.delete("/tasks/:id", auth, async (req, res) => {
+  try {
+    const task = await Task.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.userId,
+    });
+    if (!task) {
+      return res.status(404).send({ error: "Task not found" });
+    }
+    res.send({ message: "Task deleted successfully" });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// Belirli bir ID'ye sahip görevi almak (Get Task by ID)
+app.get("/tasks/:id", auth, async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      return res.status(404).send({ error: "Task not found" });
+    }
+    res.send(task);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// Belirli bir ID'ye sahip görevi güncellemek (Update Task by ID)
+app.put("/tasks/:id", auth, async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["title", "description", "priority", "type"];
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
+
+  if (!isValidOperation) {
+    return res.status(400).send({ error: "Invalid updates!" });
+  }
 
   try {
-    const tasks = await Task.find({ userId });
-    res.send(tasks);
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      return res.status(404).send({ error: "Task not found" });
+    }
+
+    updates.forEach((update) => (task[update] = req.body[update]));
+    await task.save();
+    res.send(task);
   } catch (err) {
     res.status(400).send(err);
   }

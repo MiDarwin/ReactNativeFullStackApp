@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import { Avatar, Title, Subheading } from "react-native-paper";
+import { Avatar, Title, Subheading, Button } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "../api";
 
@@ -30,7 +30,12 @@ const Settings = () => {
     const initials = names.map((n) => n[0]).join("");
     return initials.toUpperCase();
   };
-
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("token");
+    setTasks([]);
+    setIsAuthenticated(false);
+    navigation.navigate("Login");
+  };
   return (
     <View style={styles.container}>
       <Avatar.Text
@@ -40,6 +45,13 @@ const Settings = () => {
       />
       <Title>{user.username}</Title>
       <Subheading>{user.email}</Subheading>
+      <Button
+        mode="contained"
+        onPress={handleLogout}
+        style={styles.logoutButton}
+      >
+        Logout
+      </Button>
     </View>
   );
 };

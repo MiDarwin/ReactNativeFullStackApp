@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, ScrollView, StyleSheet } from "react-native";
-import { Title, Subheading, Button, FAB } from "react-native-paper";
+import { Title, Subheading, Button, FAB, IconButton } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "../api";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-
+import AddTask from "./AddTask";
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -36,36 +36,55 @@ const Tasks = () => {
     }, [])
   );
 
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem("token");
-    setTasks([]);
-    setIsAuthenticated(false);
-    navigation.navigate("Login");
+  const handleDeleteTask = async (taskId) => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      await axios.delete(`/tasks/${taskId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      fetchTasks(); // Görevleri yeniden yükle
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
       {isAuthenticated ? (
         <ScrollView>
-          {tasks.map((task) => (
-            <View key={task._id} style={styles.taskContainer}>
-              <Title>{task.title}</Title>
-              <Subheading>{task.description}</Subheading>
-              <Text>Priority: {task.priority}</Text>
-              <Text>Type: {task.type}</Text>
-            </View>
-          ))}
-          <Button
-            mode="contained"
-            onPress={handleLogout}
-            style={styles.logoutButton}
-          >
-            Logout
-          </Button>
+          {tasks
+            .sort((a, b) => {
+              const priorityOrder = { High: 1, Medium: 2, Low: 3 };
+              return priorityOrder[a.priority] - priorityOrder[b.priority];
+            })
+            .map((task) => (
+              <View key={task._id} style={styles.taskContainer}>
+                <Title>{task.title}</Title>
+                <Subheading>{task.description}</Subheading>
+                <Text>Priority: {task.priority}</Text>
+                <Text>Type: {task.type}</Text>
+                <View style={styles.taskActions}>
+                  <IconButton
+                    icon="pencil"
+                    size={20}
+                    onPress={() =>
+                      navigation.navigate("ChangeTask", { taskId: task._id })
+                    }
+                  />
+                  <IconButton
+                    icon="delete"
+                    size={20}
+                    onPress={() => handleDeleteTask(task._id)}
+                  />
+                </View>
+              </View>
+            ))}
         </ScrollView>
       ) : (
         <View style={styles.messageContainer}>
-          <Title>Please login for see your tasks.</Title>
+          <Title>Please login to see your tasks.</Title>
           <Subheading>
             If you do not have an account, you must become a member.
           </Subheading>
@@ -104,6 +123,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: "#ddd",
     backgroundColor: "#fff",
+  },
+  taskActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    position: "absolute",
+    top: 0,
+    right: 0,
+    padding: 8,
   },
   fab: {
     position: "absolute",
