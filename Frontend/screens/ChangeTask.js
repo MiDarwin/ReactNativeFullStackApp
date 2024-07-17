@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import {
   TextInput,
   Button,
@@ -64,40 +64,51 @@ const ChangeTask = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        label="Title"
-        value={title}
-        onChangeText={(text) => setTitle(text)}
-        style={styles.input}
-      />
-      <TextInput
-        label="Description"
-        value={description}
-        onChangeText={(text) => setDescription(text)}
-        style={styles.input}
-      />
-      <Text style={styles.label}>Priority</Text>
-      <Divider />
-      <RadioButton.Group
-        onValueChange={(value) => setPriority(value)}
-        value={priority}
-      >
-        <RadioButton.Item label="High" value="High" />
-        <RadioButton.Item label="Medium" value="Medium" />
-        <RadioButton.Item label="Low" value="Low" />
-      </RadioButton.Group>
-      <Divider />
-      <Text style={styles.label}>Type</Text>
-      <Divider />
-      <RadioButton.Group onValueChange={(value) => setType(value)} value={type}>
-        <RadioButton.Item label="Medical" value="Medical" />
-        <RadioButton.Item label="Lesson" value="Lesson" />
-        <RadioButton.Item label="Other" value="Other" />
-      </RadioButton.Group>
-      <Divider />
-      <Button mode="contained" onPress={handleUpdateTask} style={styles.button}>
-        Update Task
-      </Button>
+      <ScrollView>
+        <TextInput
+          label="Title"
+          value={title}
+          onChangeText={(text) => setTitle(text)}
+          style={styles.input}
+        />
+        <TextInput
+          label="Description"
+          value={description}
+          onChangeText={(text) => setDescription(text)}
+          style={styles.input}
+        />
+        <Text style={styles.label}>Priority</Text>
+        <Divider />
+        <RadioButton.Group
+          onValueChange={(value) => setPriority(value)}
+          value={priority}
+        >
+          <RadioButton.Item label="High" value="High" />
+          <RadioButton.Item label="Medium" value="Medium" />
+          <RadioButton.Item label="Low" value="Low" />
+        </RadioButton.Group>
+        <Divider />
+        <Text style={styles.label}>Type</Text>
+        <Divider />
+        <RadioButton.Group
+          onValueChange={(value) => setType(value)}
+          value={type}
+        >
+          <RadioButton.Item label="Family" value="Family" />
+          <RadioButton.Item label="Lesson" value="Lesson" />
+          <RadioButton.Item label="Job" value="Job" />
+          <RadioButton.Item label="Medical" value="Medical" />
+          <RadioButton.Item label="Other" value="Other" />
+        </RadioButton.Group>
+        <Divider />
+        <Button
+          mode="contained"
+          onPress={handleUpdateTask}
+          style={styles.button}
+        >
+          Update Task
+        </Button>
+      </ScrollView>
     </View>
   );
 };

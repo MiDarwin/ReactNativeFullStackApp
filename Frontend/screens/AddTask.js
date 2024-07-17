@@ -67,8 +67,10 @@ const AddTask = ({ navigation }) => {
           onValueChange={(value) => setType(value)}
           value={type}
         >
-          <RadioButton.Item label="Medical" value="Medical" />
+          <RadioButton.Item label="Family" value="Family" />
           <RadioButton.Item label="Lesson" value="Lesson" />
+          <RadioButton.Item label="Job" value="Job" />
+          <RadioButton.Item label="Medical" value="Medical" />
           <RadioButton.Item label="Other" value="Other" />
         </RadioButton.Group>
         <Divider />

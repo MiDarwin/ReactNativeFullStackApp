@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, Button, Text } from "react-native-paper";
+import { TextInput, Button, Text, Snackbar } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
 import axios from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorSnackbar, setErrorSnackbar] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -19,7 +20,8 @@ const Login = ({ navigation }) => {
       console.log("Bearer " + token); // Tokeni console.log ile yazdırma
       navigation.navigate("Tasks"); // Örneğin, görevler ekranına yönlendirme
     } catch (error) {
-      console.error(error);
+      //console.error(error);
+      setErrorSnackbar(true);
     }
   };
 
@@ -52,6 +54,16 @@ const Login = ({ navigation }) => {
       >
         Sign Up
       </Button>
+      <Snackbar
+        visible={errorSnackbar}
+        onDismiss={() => setErrorSnackbar(false)}
+        action={{
+          label: "Close",
+          onPress: () => setErrorSnackbar(false),
+        }}
+      >
+        Wrong email or password!
+      </Snackbar>
     </View>
   );
 };

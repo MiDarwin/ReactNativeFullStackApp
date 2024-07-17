@@ -11,15 +11,27 @@ const SignUp = ({ navigation }) => {
 
   const handleSignUp = async () => {
     try {
+      if (!isValidEmail(email)) {
+        alert(
+          "Please enter a valid email address (@gmail.com or @hotmail.com)"
+        );
+        return;
+      }
+
       const response = await axios.post("/signup", {
         username,
         email,
         password,
       });
+
       navigation.navigate("Tasks"); // Örneğin, görevler ekranına yönlendirme
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const isValidEmail = (email) => {
+    return email.endsWith("@gmail.com") || email.endsWith("@hotmail.com");
   };
 
   return (
