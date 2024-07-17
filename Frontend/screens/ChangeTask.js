@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import { TextInput, Button } from "react-native-paper";
+import {
+  TextInput,
+  Button,
+  Text,
+  Divider,
+  RadioButton,
+} from "react-native-paper";
 import axios from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -70,18 +76,25 @@ const ChangeTask = ({ route, navigation }) => {
         onChangeText={(text) => setDescription(text)}
         style={styles.input}
       />
-      <TextInput
-        label="Priority"
+      <Text style={styles.label}>Priority</Text>
+      <Divider />
+      <RadioButton.Group
+        onValueChange={(value) => setPriority(value)}
         value={priority}
-        onChangeText={(text) => setPriority(text)}
-        style={styles.input}
-      />
-      <TextInput
-        label="Type"
-        value={type}
-        onChangeText={(text) => setType(text)}
-        style={styles.input}
-      />
+      >
+        <RadioButton.Item label="High" value="High" />
+        <RadioButton.Item label="Medium" value="Medium" />
+        <RadioButton.Item label="Low" value="Low" />
+      </RadioButton.Group>
+      <Divider />
+      <Text style={styles.label}>Type</Text>
+      <Divider />
+      <RadioButton.Group onValueChange={(value) => setType(value)} value={type}>
+        <RadioButton.Item label="Medical" value="Medical" />
+        <RadioButton.Item label="Lesson" value="Lesson" />
+        <RadioButton.Item label="Other" value="Other" />
+      </RadioButton.Group>
+      <Divider />
       <Button mode="contained" onPress={handleUpdateTask} style={styles.button}>
         Update Task
       </Button>

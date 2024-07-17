@@ -30,12 +30,7 @@ const Tasks = () => {
       setIsAuthenticated(false);
     }
   };
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem("token");
-    setTasks();
-    setIsAuthenticated(false);
-    navigation.navigate("Login");
-  };
+
   useFocusEffect(
     React.useCallback(() => {
       fetchTasks();
