@@ -16,9 +16,6 @@ const SignUp = ({ navigation }) => {
         email,
         password,
       });
-      const token = response.data.token;
-      await AsyncStorage.setItem("token", token);
-      console.log("Bearer " + token); // Tokeni console.log ile yazdırma
       navigation.navigate("Tasks"); // Örneğin, görevler ekranına yönlendirme
     } catch (error) {
       console.error(error);

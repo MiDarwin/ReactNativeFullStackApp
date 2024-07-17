@@ -4,7 +4,8 @@ import { Title, Subheading, Button, FAB, IconButton } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "../api";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import AddTask from "./AddTask";
+import RNPickerSelect from "react-native-picker-select";
+import { ThemeContext } from "../context/ThemeContext";
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -29,7 +30,12 @@ const Tasks = () => {
       setIsAuthenticated(false);
     }
   };
-
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("token");
+    setTasks();
+    setIsAuthenticated(false);
+    navigation.navigate("Login");
+  };
   useFocusEffect(
     React.useCallback(() => {
       fetchTasks();
@@ -90,8 +96,8 @@ const Tasks = () => {
           </Subheading>
           <Button
             mode="contained"
-            onPress={() => navigation.navigate("SignUp")}
-            style={styles.authButton}
+            onPress={() => navigation.navigate("Sign Up")}
+            style={styles.button}
           >
             Sign Up
           </Button>
@@ -116,6 +122,9 @@ const Tasks = () => {
 };
 
 const styles = StyleSheet.create({
+  button: {
+    marginTop: 10,
+  },
   taskContainer: {
     marginBottom: 16,
     padding: 16,

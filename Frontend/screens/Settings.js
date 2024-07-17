@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { Avatar, Title, Subheading, Button } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "../api";
+import { ThemeContext } from "../context/ThemeContext";
+import { useNavigation } from "@react-navigation/native";
 
 const Settings = () => {
   const [user, setUser] = useState({ username: "", email: "" });
+  const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,27 +34,31 @@ const Settings = () => {
     const initials = names.map((n) => n[0]).join("");
     return initials.toUpperCase();
   };
+
   const handleLogout = async () => {
-    await AsyncStorage.removeItem("token");
-    setTasks([]);
-    setIsAuthenticated(false);
-    navigation.navigate("Login");
+    try {
+      await AsyncStorage.removeItem("token");
+      setUser({ username: "", email: "" });
+      navigation.navigate("Login");
+    } catch (error) {
+      console.error("Error logging out: ", error);
+    }
   };
+
   return (
-    <View style={styles.container}>
+    <View style={theme.container}>
       <Avatar.Text
         size={64}
         label={getInitials(user.username)}
         style={styles.avatar}
       />
-      <Title>{user.username}</Title>
-      <Subheading>{user.email}</Subheading>
-      <Button
-        mode="contained"
-        onPress={handleLogout}
-        style={styles.logoutButton}
-      >
+      <Title style={theme.input}>{user.username}</Title>
+      <Subheading style={theme.input}>{user.email}</Subheading>
+      <Button mode="contained" onPress={handleLogout} style={theme.button}>
         Logout
+      </Button>
+      <Button mode="contained" onPress={toggleTheme} style={theme.button}>
+        Toggle Theme
       </Button>
     </View>
   );
