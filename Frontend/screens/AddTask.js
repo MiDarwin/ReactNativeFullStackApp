@@ -9,7 +9,10 @@ import {
 } from "react-native-paper";
 import axios from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import {
+  scheduleNotification,
+  cancelAllScheduledNotifications,
+} from "./NotificationService";
 const AddTask = ({ navigation }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -21,7 +24,7 @@ const AddTask = ({ navigation }) => {
   const handleAddTask = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      await axios.post(
+      const response = await axios.post(
         "/tasks",
         { title, description, priority, type, reminderFrequency },
         {
@@ -30,6 +33,15 @@ const AddTask = ({ navigation }) => {
           },
         }
       );
+
+      // Bildirim ayarlarını yap
+      if (reminderFrequency !== "No Notifications") {
+        await scheduleNotification(title, description, reminderFrequency);
+        console.log("Bildirim eklendi:", title, description, reminderFrequency);
+      } else {
+        console.log("Bildirim eklenmedi, çünkü hatırlatma sıklığı seçilmedi.");
+      }
+
       navigation.navigate("Tasks");
     } catch (error) {
       console.error(error);
@@ -83,6 +95,7 @@ const AddTask = ({ navigation }) => {
           value={reminderFrequency}
         >
           <RadioButton.Item label="No Notifications" value="No Notifications" />
+          <RadioButton.Item label="5 minutes" value="5 minutes" />
           <RadioButton.Item label="30 minutes" value="30 minutes" />
           <RadioButton.Item label="1 hour" value="1 hour" />
           <RadioButton.Item label="2 hours" value="2 hours" />

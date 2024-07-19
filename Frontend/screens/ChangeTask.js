@@ -9,6 +9,10 @@ import {
 } from "react-native-paper";
 import axios from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  scheduleNotification,
+  cancelAllScheduledNotifications,
+} from "./NotificationService";
 
 const ChangeTask = ({ route, navigation }) => {
   const { taskId } = route.params;
@@ -48,11 +52,21 @@ const ChangeTask = ({ route, navigation }) => {
         `/tasks/${taskId}`,
         { title, description, priority, type, reminderFrequency },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
+
+      // Eski bildirimleri iptal et
+      await cancelAllScheduledNotifications();
+
+      // Yeni bildirimleri planla
+      if (reminderFrequency !== "No Notifications") {
+        await scheduleNotification(title, description, reminderFrequency);
+        console.log("Bildirim eklendi:", title, description, reminderFrequency);
+      } else {
+        console.log("Bildirim eklenmedi, çünkü hatırlatma sıklığı seçilmedi.");
+      }
+
       navigation.navigate("Tasks");
     } catch (error) {
       console.error(error);

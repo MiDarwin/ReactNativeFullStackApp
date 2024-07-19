@@ -6,6 +6,7 @@ import axios from "../api";
 import { ThemeContext } from "../context/ThemeContext";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
+import { scheduleNotification } from "./NotificationService"; // NotificationService'i import et
 
 // First, set the handler that will cause the notification
 // to show the alert
@@ -33,6 +34,15 @@ const Settings = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const handleSendTestNotification = async () => {
+    // Test bildirimi ayarla
+    await scheduleNotification(
+      "Test Bildirimi",
+      "Bu bir test bildirimidir.",
+      "Immediate"
+    );
+    console.log("Test bildirimi gönderildi");
+  };
   const fetchUser = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -89,11 +99,10 @@ const Settings = () => {
         Logout
       </Button>
       <Button
-        mode="contained"
-        onPress={Notifications.scheduleNotificationAsync}
-        style={theme.button}
+        title="Test Bildirimi Gönder"
+        onPress={handleSendTestNotification}
       >
-        Bildirim
+        Test
       </Button>
     </View>
   );
