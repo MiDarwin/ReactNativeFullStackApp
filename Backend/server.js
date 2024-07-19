@@ -91,14 +91,21 @@ app.get("/me", auth, async (req, res) => {
     res.status(500).send(error);
   }
 });
-
 // İş ekleme (Add Task)
 app.post("/tasks", auth, async (req, res) => {
-  const { title, description, priority, type } = req.body;
+  const { title, description, priority, type, reminderFrequency } = req.body;
   const userId = req.userId; // auth middleware'den gelen userId
   const _id = makeid(15);
   console.log("UserID from middleware:", userId); // Debug log
-  const task = new Task({ _id, title, description, priority, type, userId });
+  const task = new Task({
+    _id,
+    title,
+    description,
+    priority,
+    type,
+    reminderFrequency,
+    userId,
+  });
 
   try {
     await task.save();
@@ -153,7 +160,13 @@ app.get("/tasks/:id", auth, async (req, res) => {
 // Belirli bir ID'ye sahip görevi güncellemek (Update Task by ID)
 app.put("/tasks/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["title", "description", "priority", "type"];
+  const allowedUpdates = [
+    "title",
+    "description",
+    "priority",
+    "type",
+    "reminderFrequency",
+  ];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );

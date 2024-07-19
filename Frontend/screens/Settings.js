@@ -5,7 +5,28 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "../api";
 import { ThemeContext } from "../context/ThemeContext";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import * as Notifications from "expo-notifications";
 
+// First, set the handler that will cause the notification
+// to show the alert
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+// Second, call the method
+
+Notifications.scheduleNotificationAsync({
+  content: {
+    title: "Look at that notification",
+    body: "I'm so proud of myself!",
+  },
+  trigger: null,
+});
 const Settings = () => {
   const [user, setUser] = useState({ username: "", email: "" });
   const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
@@ -66,6 +87,13 @@ const Settings = () => {
       <Subheading style={theme.input}>{user.email}</Subheading>
       <Button mode="contained" onPress={handleLogout} style={theme.button}>
         Logout
+      </Button>
+      <Button
+        mode="contained"
+        onPress={Notifications.scheduleNotificationAsync}
+        style={theme.button}
+      >
+        Bildirim
       </Button>
     </View>
   );

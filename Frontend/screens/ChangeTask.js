@@ -16,6 +16,7 @@ const ChangeTask = ({ route, navigation }) => {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
   const [type, setType] = useState("");
+  const [reminderFrequency, setReminderFrequency] = useState("");
 
   useEffect(() => {
     const fetchTask = async () => {
@@ -31,6 +32,7 @@ const ChangeTask = ({ route, navigation }) => {
         setDescription(task.description);
         setPriority(task.priority);
         setType(task.type);
+        setReminderFrequency(task.reminderFrequency);
       } catch (error) {
         console.error(error);
       }
@@ -44,12 +46,7 @@ const ChangeTask = ({ route, navigation }) => {
       const token = await AsyncStorage.getItem("token");
       await axios.put(
         `/tasks/${taskId}`,
-        {
-          title,
-          description,
-          priority,
-          type,
-        },
+        { title, description, priority, type, reminderFrequency },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -101,6 +98,21 @@ const ChangeTask = ({ route, navigation }) => {
           <RadioButton.Item label="Other" value="Other" />
         </RadioButton.Group>
         <Divider />
+        <Text style={styles.label}>Reminder Frequency</Text>
+        <Divider />
+        <RadioButton.Group
+          onValueChange={(value) => setReminderFrequency(value)}
+          value={reminderFrequency}
+        >
+          <RadioButton.Item label="No Notifications" value="No Notifications" />
+          <RadioButton.Item label="30 minutes" value="30 minutes" />
+          <RadioButton.Item label="1 hour" value="1 hour" />
+          <RadioButton.Item label="2 hours" value="2 hours" />
+          <RadioButton.Item label="3 hours" value="3 hours" />
+          <RadioButton.Item label="4 hours" value="4 hours" />
+          <RadioButton.Item label="5 hours" value="5 hours" />
+        </RadioButton.Group>
+        <Divider />
         <Button
           mode="contained"
           onPress={handleUpdateTask}
@@ -112,7 +124,6 @@ const ChangeTask = ({ route, navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -104,6 +104,7 @@ const Tasks = () => {
                   <Subheading>{task.description}</Subheading>
                   <Text>Priority: {task.priority}</Text>
                   <Text>Type: {task.type}</Text>
+                  <Text>Notifications: {task.reminderFrequency} </Text>
                   <View style={styles.taskActions}>
                     <IconButton
                       icon="delete"

@@ -15,13 +15,15 @@ const AddTask = ({ navigation }) => {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("High");
   const [type, setType] = useState("Medical");
+  const [reminderFrequency, setReminderFrequency] =
+    useState("No Notifications");
 
   const handleAddTask = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
       await axios.post(
         "/tasks",
-        { title, description, priority, type },
+        { title, description, priority, type, reminderFrequency },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -72,6 +74,20 @@ const AddTask = ({ navigation }) => {
           <RadioButton.Item label="Job" value="Job" />
           <RadioButton.Item label="Medical" value="Medical" />
           <RadioButton.Item label="Other" value="Other" />
+        </RadioButton.Group>
+        <Divider />
+        <Text style={styles.label}>Reminder Frequency</Text>
+        <Divider />
+        <RadioButton.Group
+          onValueChange={(value) => setReminderFrequency(value)}
+          value={reminderFrequency}
+        >
+          <RadioButton.Item label="No Notifications" value="No Notifications" />
+          <RadioButton.Item label="30 minutes" value="30 minutes" />
+          <RadioButton.Item label="1 hour" value="1 hour" />
+          <RadioButton.Item label="2 hours" value="2 hours" />
+          <RadioButton.Item label="3 hours" value="3 hours" />
+          <RadioButton.Item label="4 hours" value="4 hours" />
         </RadioButton.Group>
         <Divider />
         <Button mode="contained" onPress={handleAddTask} style={styles.button}>
