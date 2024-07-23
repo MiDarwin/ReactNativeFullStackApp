@@ -10,6 +10,7 @@ import ChangeTask from "./screens/ChangeTask";
 import AppThemeProvider from "./components/ThemeProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Filter from "./screens/Filter";
+
 const Drawer = createDrawerNavigator();
 
 export default function App() {

@@ -20,6 +20,8 @@ export default StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "white",
+    marginTop: 0,
+    marginBottom: 0,
   },
   button: {
     marginTop: 10,
@@ -33,7 +35,7 @@ export default StyleSheet.create({
     overflow: "hidden",
   },
   taskContainer: {
-    marginBottom: 16,
+    marginBottom: 5,
     padding: 0.1,
     borderWidth: 1,
     borderRadius: 15,
@@ -88,6 +90,21 @@ export default StyleSheet.create({
     color: "green",
     marginLeft: 10,
   },
+  fabContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderTopColor: "gray",
+    padding: 10,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 80,
+    backgroundColor: "white", // Temaya göre ayarlayabilirsiniz
+  },
+
   fab: {
     position: "absolute",
     margin: 16,
@@ -95,7 +112,7 @@ export default StyleSheet.create({
     bottom: 0,
     backgroundColor: "#8EACCD",
   },
-  fabAccount: {
+  fabFilter: {
     position: "absolute",
     margin: 16,
     left: 0,

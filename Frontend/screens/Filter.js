@@ -1,26 +1,25 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
-  Text,
   View,
-  ScrollView,
-  StyleSheet,
+  Text,
   TouchableOpacity,
+  StyleSheet,
+  FlatList,
 } from "react-native";
-import { Title, Icon, Button } from "react-native-paper";
-import { ThemeContext } from "../context/ThemeContext";
+import { IconButton } from "react-native-paper";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
-const Filter = ({ navigation }) => {
-  const [selectedCategories, setSelectedCategories] = useState([
-    "Family",
-    "Lesson",
-    "Job",
-    "Medical",
-    "Other",
-  ]);
+const Filter = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { selectedCategories: initialSelectedCategories, onSave } =
+    route.params;
 
-  const { theme } = useContext(ThemeContext);
+  const [selectedCategories, setSelectedCategories] = useState(
+    initialSelectedCategories
+  );
 
-  const categories = [
+  const taskTypes = [
     { label: "Family", value: "Family", icon: "account-group" },
     { label: "Lesson", value: "Lesson", icon: "school" },
     { label: "Job", value: "Job", icon: "briefcase" },
@@ -28,7 +27,7 @@ const Filter = ({ navigation }) => {
     { label: "Other", value: "Other", icon: "dots-horizontal" },
   ];
 
-  const handleCategoryPress = (category) => {
+  const toggleCategory = (category) => {
     if (selectedCategories.includes(category)) {
       setSelectedCategories(
         selectedCategories.filter((item) => item !== category)
@@ -38,76 +37,70 @@ const Filter = ({ navigation }) => {
     }
   };
 
+  const handleSave = () => {
+    onSave(selectedCategories);
+    navigation.goBack();
+  };
+
   return (
-    <View style={theme.filterContainer}>
-      <ScrollView contentContainerStyle={theme.filterScrollContainer}>
-        <View style={theme.filterGrid}>
-          {categories.map((category) => (
-            <TouchableOpacity
-              key={category.value}
-              style={[
-                theme.filterItem,
-                selectedCategories.includes(category.value) &&
-                  theme.filterItemSelected,
-              ]}
-              onPress={() => handleCategoryPress(category.value)}
-            >
-              <Icon name={category.icon} size={30} style={theme.filterIcon} />
-              <Text style={theme.filterText}>{category.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
-      <View style={theme.filterButtonContainer}>
-        <Button
-          mode="contained"
-          onPress={() => {
-            navigation.navigate("Tasks", { selectedCategories });
-          }}
-        >
-          Apply Filters
-        </Button>
-      </View>
+    <View style={styles.container}>
+      <FlatList
+        data={taskTypes}
+        numColumns={2}
+        keyExtractor={(item) => item.value}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={[
+              styles.typeContainer,
+              {
+                backgroundColor: selectedCategories.includes(item.value)
+                  ? "#8EACCD"
+                  : "gray",
+              },
+            ]}
+            onPress={() => toggleCategory(item.value)}
+          >
+            <IconButton icon={item.icon} size={30} color="white" />
+            <Text style={styles.typeLabel}>{item.label}</Text>
+          </TouchableOpacity>
+        )}
+      />
+      <TouchableOpacity style={styles.applyButton} onPress={handleSave}>
+        <Text style={styles.applyButtonText}>Apply Filters</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  filterContainer: {
+  container: {
     flex: 1,
-    backgroundColor: "white",
-    padding: 20,
-  },
-  filterScrollContainer: {
-    flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
   },
-  filterGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-  },
-  filterItem: {
+  typeContainer: {
+    flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
+    width: 100,
+    height: 100,
     margin: 10,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "lightgray",
+    borderRadius: 25,
   },
-  filterItemSelected: {
-    backgroundColor: "blue",
-  },
-  filterIcon: {
+  typeLabel: {
     color: "white",
+    fontWeight: "bold",
   },
-  filterText: {
-    color: "white",
-    marginTop: 5,
-  },
-  filterButtonContainer: {
+  applyButton: {
     marginTop: 20,
-    alignItems: "center",
+    padding: 10,
+    backgroundColor: "#8EACCD",
+    borderRadius: 10,
+  },
+  applyButtonText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
 

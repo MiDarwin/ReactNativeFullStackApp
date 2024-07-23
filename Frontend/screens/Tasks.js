@@ -8,20 +8,25 @@ import {
   IconButton,
   Checkbox,
   Icon,
+  BottomNavigation,
 } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "../api";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import RNPickerSelect from "react-native-picker-select";
 import { ThemeContext } from "../context/ThemeContext";
+import Tooltip from "../components/Tooltip";
+const taskTypes = ["Family", "Lesson", "Job", "Medical", "Other"];
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigation = useNavigation();
   const [completedTasks, setCompletedTasks] = useState([]); // Hold IDs of completed tasks
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [checked, setChecked] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState(taskTypes); // Set initial selected categories to all types
   const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
+  const [tooltipVisible, setTooltipVisible] = useState(null);
+  const [checkedTaskId, setCheckedTaskId] = useState(null); // Güncellenmiş görev ID'si
+  const [showTooltip, setShowTooltip] = useState(false); // Tooltip görünürlüğü
   const fetchTasks = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -62,25 +67,34 @@ const Tasks = () => {
     }
   };
 
-  const filteredTasks = selectedCategory
-    ? tasks.filter((task) => task.type === selectedCategory)
-    : tasks;
+  const filteredTasks =
+    selectedCategories.length > 0
+      ? tasks.filter((task) => selectedCategories.includes(task.type))
+      : tasks;
 
   const handleCompleteTask = async (taskId) => {
-    try {
-      // Update completedTasks array with taskId
-      setCompletedTasks([...completedTasks, taskId]);
+    setCompletedTasks((prevCompletedTasks) => {
+      if (prevCompletedTasks.includes(taskId)) {
+        return prevCompletedTasks.filter((id) => id !== taskId);
+      } else {
+        return [...prevCompletedTasks, taskId];
+      }
+    });
 
-      // Wait for a few seconds and then delete the task
-      setTimeout(() => {
-        handleDeleteTask(taskId);
-      }, 3000); // 3000 milliseconds (3 seconds) delay
-    } catch (error) {
-      console.error(error);
-    }
+    setShowTooltip((prevShowTooltip) => ({
+      ...prevShowTooltip,
+      [taskId]: true,
+    }));
+
+    // Show tooltip for 2 seconds
+    setTimeout(() => {
+      setShowTooltip((prevShowTooltip) => ({
+        ...prevShowTooltip,
+        [taskId]: false,
+      }));
+    }, 2000);
   };
 
-  // Function to check if a task is completed
   const isTaskCompleted = (taskId) => completedTasks.includes(taskId);
 
   const getTaskContainerStyle = (priority) => {
@@ -112,28 +126,14 @@ const Tasks = () => {
         return "clipboard-text";
     }
   };
-
+  const handleSaveCategories = (updatedCategories) => {
+    setSelectedCategories(updatedCategories);
+  };
   return (
     <View style={theme.TasksPage}>
       {isAuthenticated ? (
         <>
-          <View style={theme.pickerContainer}>
-            <RNPickerSelect
-              style={pickerSelectStyles}
-              onValueChange={(value) => setSelectedCategory(value)}
-              items={[
-                { label: "All", value: "null" },
-                { label: "Family", value: "Family" },
-                { label: "Lesson", value: "Lesson" },
-                { label: "Job", value: "Job" },
-                { label: "Medical", value: "Medical" },
-                { label: "Other", value: "Other" },
-              ]}
-              placeholder={{ label: "Select a category", value: null }}
-              value={selectedCategory}
-            />
-          </View>
-          <ScrollView>
+          <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
             {filteredTasks
               .sort((a, b) => {
                 const priorityOrder = { High: 1, Medium: 2, Low: 3 };
@@ -174,6 +174,12 @@ const Tasks = () => {
                     </Subheading>
                     <Text>Priority: {task.priority}</Text>
                     <Text>Type: {task.type}</Text>
+                    <Tooltip
+                      visible={tooltipVisible === task._id}
+                      position={{ top: 100, left: 500 }} // Konum ayarlarını buradan yapabilirsiniz
+                    >
+                      Completed
+                    </Tooltip>
                   </View>
                   <View style={theme.checkContainer}>
                     <Text style={theme.notificationText}>
@@ -188,8 +194,10 @@ const Tasks = () => {
                       }}
                       uncheckedColor="gray"
                     />
-                    {isTaskCompleted(task._id) && (
-                      <Text style={theme.completedText}>Completed</Text>
+                    {isTaskCompleted(task._id) && showTooltip[task._id] && (
+                      <Tooltip visible={showTooltip[task._id]}>
+                        Completed
+                      </Tooltip>
                     )}
                   </View>
                 </View>
@@ -219,23 +227,35 @@ const Tasks = () => {
         </View>
       )}
       {isAuthenticated && (
-        <>
+        <View style={theme.fabContainer}>
           <FAB
             icon="plus"
             style={theme.fab}
             onPress={() => navigation.navigate("Add Task")}
           />
           <FAB
-            icon="account"
-            style={theme.fabAccount}
-            onPress={() => navigation.navigate("Settings")}
+            icon="filter"
+            style={theme.fabFilter}
+            onPress={() =>
+              navigation.navigate("Filter", {
+                selectedCategories,
+                onSave: handleSaveCategories,
+              })
+            }
           />
-        </>
+        </View>
       )}
     </View>
   );
 };
-
+const styles = StyleSheet.create({
+  filterButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    padding: 10,
+  },
+  // Diğer stiller buraya eklenebilir
+});
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 16,
