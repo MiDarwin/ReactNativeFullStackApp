@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet } from "react-native";
-import { Avatar, Title, Subheading, Button } from "react-native-paper";
+import { Avatar, Title, Subheading, Button, Switch } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "../api";
 import { ThemeContext } from "../context/ThemeContext";
@@ -102,8 +102,12 @@ const Settings = () => {
         title="Test Bildirimi Gönder"
         onPress={handleSendTestNotification}
       >
-        Test
+        Test Notification
       </Button>
+      <View style={styles.switchContainer}>
+        <Subheading style={theme.input}>Dark Theme</Subheading>
+        <Switch value={isDarkTheme} onValueChange={toggleTheme} />
+      </View>
     </View>
   );
 };

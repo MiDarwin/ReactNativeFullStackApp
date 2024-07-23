@@ -9,7 +9,7 @@ import SignUp from "./screens/SignUp"; // SignUp ekranını ekliyoruz
 import ChangeTask from "./screens/ChangeTask";
 import AppThemeProvider from "./components/ThemeProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import Filter from "./screens/Filter";
 const Drawer = createDrawerNavigator();
 
 export default function App() {
@@ -31,6 +31,7 @@ export default function App() {
           <Drawer.Screen name="Tasks" component={Tasks} />
           <Drawer.Screen name="Add Task" component={AddTask} />
           <Drawer.Screen name="Settings" component={Settings} />
+          <Drawer.Screen name="Filter" component={Filter} />
           <Drawer.Screen
             name="Login"
             component={Login}

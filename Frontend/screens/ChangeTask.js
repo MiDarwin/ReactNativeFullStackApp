@@ -119,12 +119,12 @@ const ChangeTask = ({ route, navigation }) => {
           value={reminderFrequency}
         >
           <RadioButton.Item label="No Notifications" value="No Notifications" />
+          <RadioButton.Item label="5 minutes" value="5 minutes" />
           <RadioButton.Item label="30 minutes" value="30 minutes" />
           <RadioButton.Item label="1 hour" value="1 hour" />
           <RadioButton.Item label="2 hours" value="2 hours" />
           <RadioButton.Item label="3 hours" value="3 hours" />
           <RadioButton.Item label="4 hours" value="4 hours" />
-          <RadioButton.Item label="5 hours" value="5 hours" />
         </RadioButton.Group>
         <Divider />
         <Button

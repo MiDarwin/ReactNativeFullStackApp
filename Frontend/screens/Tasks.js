@@ -1,19 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Text, View, ScrollView, StyleSheet } from "react-native";
-import { Title, Subheading, Button, FAB, IconButton } from "react-native-paper";
+import {
+  Title,
+  Subheading,
+  Button,
+  FAB,
+  IconButton,
+  Checkbox,
+  Icon,
+} from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "../api";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import RNPickerSelect from "react-native-picker-select";
 import { ThemeContext } from "../context/ThemeContext";
-
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigation = useNavigation();
   const [completedTasks, setCompletedTasks] = useState([]); // Hold IDs of completed tasks
   const [selectedCategory, setSelectedCategory] = useState("");
-
+  const [checked, setChecked] = useState(false);
+  const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
   const fetchTasks = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -50,7 +58,7 @@ const Tasks = () => {
       });
       fetchTasks(); // Reload tasks after deletion
     } catch (error) {
-      //console.error(error);
+      console.error(error);
     }
   };
 
@@ -75,23 +83,56 @@ const Tasks = () => {
   // Function to check if a task is completed
   const isTaskCompleted = (taskId) => completedTasks.includes(taskId);
 
+  const getTaskContainerStyle = (priority) => {
+    switch (priority) {
+      case "High":
+        return [theme.taskContainer, theme.highPriority];
+      case "Medium":
+        return [theme.taskContainer, theme.mediumPriority];
+      case "Low":
+        return [theme.taskContainer, theme.lowPriority];
+      default:
+        return theme.taskContainer;
+    }
+  };
+
+  const getIconName = (type) => {
+    switch (type) {
+      case "Family":
+        return "account-group";
+      case "Lesson":
+        return "school";
+      case "Job":
+        return "briefcase";
+      case "Medical":
+        return "hospital";
+      case "Other":
+        return "dots-horizontal";
+      default:
+        return "clipboard-text";
+    }
+  };
+
   return (
-    <View style={{ flex: 1, padding: 16 }}>
+    <View style={theme.TasksPage}>
       {isAuthenticated ? (
         <>
-          <RNPickerSelect
-            onValueChange={(value) => setSelectedCategory(value)}
-            items={[
-              { label: "All", value: "null" },
-              { label: "Family", value: "Family" },
-              { label: "Lesson", value: "Lesson" },
-              { label: "Job", value: "Job" },
-              { label: "Medical", value: "Medical" },
-              { label: "Other", value: "Other" },
-            ]}
-            placeholder={{ label: "Select a category", value: null }}
-            value={selectedCategory}
-          />
+          <View style={theme.pickerContainer}>
+            <RNPickerSelect
+              style={pickerSelectStyles}
+              onValueChange={(value) => setSelectedCategory(value)}
+              items={[
+                { label: "All", value: "null" },
+                { label: "Family", value: "Family" },
+                { label: "Lesson", value: "Lesson" },
+                { label: "Job", value: "Job" },
+                { label: "Medical", value: "Medical" },
+                { label: "Other", value: "Other" },
+              ]}
+              placeholder={{ label: "Select a category", value: null }}
+              value={selectedCategory}
+            />
+          </View>
           <ScrollView>
             {filteredTasks
               .sort((a, b) => {
@@ -99,33 +140,56 @@ const Tasks = () => {
                 return priorityOrder[a.priority] - priorityOrder[b.priority];
               })
               .map((task) => (
-                <View key={task._id} style={styles.taskContainer}>
-                  <Title>{task.title}</Title>
-                  <Subheading>{task.description}</Subheading>
-                  <Text>Priority: {task.priority}</Text>
-                  <Text>Type: {task.type}</Text>
-                  <Text>Notifications: {task.reminderFrequency} </Text>
-                  <View style={styles.taskActions}>
+                <View
+                  key={task._id}
+                  style={getTaskContainerStyle(task.priority)}
+                >
+                  <View style={theme.taskHeader}>
                     <IconButton
-                      icon="delete"
+                      icon={getIconName(task.type)}
                       size={20}
-                      onPress={() => handleDeleteTask(task._id)}
+                      style={theme.taskIcon}
                     />
-                    <IconButton
-                      icon="pencil"
-                      size={20}
-                      onPress={() =>
-                        navigation.navigate("ChangeTask", { taskId: task._id })
+                    <Title style={theme.title}>{task.title}</Title>
+                    <View style={theme.iconContainer}>
+                      <IconButton
+                        icon="pencil"
+                        size={20}
+                        onPress={() =>
+                          navigation.navigate("ChangeTask", {
+                            taskId: task._id,
+                          })
+                        }
+                      />
+                      <IconButton
+                        icon="delete"
+                        size={20}
+                        onPress={() => handleDeleteTask(task._id)}
+                      />
+                    </View>
+                  </View>
+                  <View style={theme.taskInfo}>
+                    <Subheading style={theme.subheading}>
+                      {task.description}
+                    </Subheading>
+                    <Text>Priority: {task.priority}</Text>
+                    <Text>Type: {task.type}</Text>
+                  </View>
+                  <View style={theme.checkContainer}>
+                    <Text style={theme.notificationText}>
+                      Notifications: {task.reminderFrequency}
+                    </Text>
+                    <Checkbox
+                      status={
+                        isTaskCompleted(task._id) ? "checked" : "unchecked"
                       }
-                    />
-                    <IconButton
-                      icon="check"
-                      size={30}
-                      style={styles.checkIcon}
-                      onPress={() => handleCompleteTask(task._id)}
+                      onPress={() => {
+                        handleCompleteTask(task._id);
+                      }}
+                      uncheckedColor="gray"
                     />
                     {isTaskCompleted(task._id) && (
-                      <Text style={styles.completedText}>Completed</Text>
+                      <Text style={theme.completedText}>Completed</Text>
                     )}
                   </View>
                 </View>
@@ -133,7 +197,7 @@ const Tasks = () => {
           </ScrollView>
         </>
       ) : (
-        <View style={styles.messageContainer}>
+        <View style={theme.messageContainer}>
           <Title>Please login to see your tasks.</Title>
           <Subheading>
             If you do not have an account, you must become a member.
@@ -141,73 +205,60 @@ const Tasks = () => {
           <Button
             mode="contained"
             onPress={() => navigation.navigate("Sign Up")}
-            style={styles.button}
+            style={theme.button}
           >
             Sign Up
           </Button>
           <Button
             mode="text"
             onPress={() => navigation.navigate("Login")}
-            style={styles.authButton}
+            style={theme.authButton}
           >
             Login
           </Button>
         </View>
       )}
       {isAuthenticated && (
-        <FAB
-          icon="plus"
-          style={styles.fab}
-          onPress={() => navigation.navigate("Add Task")}
-        />
+        <>
+          <FAB
+            icon="plus"
+            style={theme.fab}
+            onPress={() => navigation.navigate("Add Task")}
+          />
+          <FAB
+            icon="account"
+            style={theme.fabAccount}
+            onPress={() => navigation.navigate("Settings")}
+          />
+        </>
       )}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    marginTop: 10,
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 0,
+    borderRadius: 15,
+    color: "black",
+    paddingRight: 30,
+    backgroundColor: "white",
   },
-  taskContainer: {
-    marginBottom: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "#ddd",
-    backgroundColor: "#fff",
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0,
+    borderRadius: 15,
+    color: "black",
+    paddingRight: 30,
+    backgroundColor: "white",
   },
-  taskActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    marginTop: 10,
-  },
-  fab: {
-    position: "absolute",
-    margin: 16,
-    right: 0,
-    bottom: 0,
-  },
-  messageContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  authButton: {
-    marginTop: 16,
-  },
-  logoutButton: {
-    marginTop: 16,
-  },
-  checkIcon: {
-    marginTop: 10,
-  },
-  completedText: {
-    color: "green",
-    marginTop: 10,
-    textAlign: "center",
+  placeholder: {
+    color: "gray",
   },
 });
 

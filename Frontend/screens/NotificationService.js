@@ -16,9 +16,6 @@ Notifications.setNotificationHandler({
 export async function scheduleNotification(title, body, reminderFrequency) {
   let trigger;
   switch (reminderFrequency) {
-    case "10 second":
-      trigger = { seconds: 1 * 60 }; // 1 dakika
-      break;
     case "5 minutes":
       trigger = { seconds: 5 * 60 }; // 5 dakika
       break;
