@@ -26,7 +26,7 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.containerLogin}>
       <Text style={styles.title} variant="displayMedium">
         Welcome to ToDoList
       </Text>
@@ -48,7 +48,7 @@ const Login = ({ navigation }) => {
         Login
       </Button>
       <Button
-        mode="text"
+        mode="contained"
         onPress={() => navigation.navigate("Sign Up")}
         style={styles.button}
       >
@@ -69,18 +69,22 @@ const Login = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  containerLogin: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#E55E4D",
   },
   input: {
     marginBottom: 16,
+    backgroundColor: "#a7cdbd",
   },
   button: {
     marginTop: 16,
+    backgroundColor: "#5CC8FF",
   },
   title: {
     marginBottom: 30,
+    color: "#fff",
   },
 });
 

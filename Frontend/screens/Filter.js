@@ -39,7 +39,7 @@ const Filter = () => {
 
   const handleSave = () => {
     onSave(selectedCategories);
-    navigation.goBack();
+    navigation.navigate("Tasks");
   };
 
   return (
@@ -54,7 +54,7 @@ const Filter = () => {
               styles.typeContainer,
               {
                 backgroundColor: selectedCategories.includes(item.value)
-                  ? "#8EACCD"
+                  ? "#a7cdbd"
                   : "gray",
               },
             ]}
@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    backgroundColor: "#f5f5f5",
   },
   typeContainer: {
     flexDirection: "column",
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   applyButton: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: "#8EACCD",
+    backgroundColor: "#a7cdbd",
     borderRadius: 10,
   },
   applyButtonText: {

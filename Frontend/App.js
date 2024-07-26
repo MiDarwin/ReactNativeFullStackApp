@@ -10,6 +10,7 @@ import ChangeTask from "./screens/ChangeTask";
 import AppThemeProvider from "./components/ThemeProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Filter from "./screens/Filter";
+import SplashScreen from "./screens/SplashScreen"; // Yeni eklediğimiz SplashScreen bileşenini içe aktarın
 
 const Drawer = createDrawerNavigator();
 
@@ -28,7 +29,14 @@ export default function App() {
   return (
     <AppThemeProvider>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Login">
+        <Drawer.Navigator initialRouteName="SplashScreen">
+          <Drawer.Screen
+            name="SplashScreen"
+            component={SplashScreen}
+            options={{
+              drawerItemStyle: { display: "none" },
+            }}
+          />
           <Drawer.Screen name="Tasks" component={Tasks} />
           <Drawer.Screen name="Add Task" component={AddTask} />
           <Drawer.Screen name="Settings" component={Settings} />
@@ -43,12 +51,10 @@ export default function App() {
           <Drawer.Screen
             name="Sign Up"
             component={SignUp}
-            hi
             options={{
               drawerItemStyle: { display: "none" },
             }}
           />
-          {/* SignUp ekranını ekliyoruz */}
           <Drawer.Screen
             name="ChangeTask"
             component={ChangeTask}

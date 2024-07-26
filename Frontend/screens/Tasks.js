@@ -178,7 +178,7 @@ const Tasks = () => {
                       visible={tooltipVisible === task._id}
                       position={{ top: 100, left: 500 }} // Konum ayarlarını buradan yapabilirsiniz
                     >
-                      Completed
+                      Completed!
                     </Tooltip>
                   </View>
                   <View style={theme.checkContainer}>
@@ -230,7 +230,7 @@ const Tasks = () => {
         <View style={theme.fabContainer}>
           <FAB
             icon="plus"
-            style={theme.fab}
+            style={[theme.fab, { color: "#fff" }]}
             onPress={() => navigation.navigate("Add Task")}
           />
           <FAB

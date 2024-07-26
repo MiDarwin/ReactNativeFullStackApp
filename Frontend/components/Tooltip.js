@@ -24,13 +24,13 @@ const styles = StyleSheet.create({
     bottom: 40, // Alttan 10 birim mesafe
   },
   tooltipBubble: {
-    backgroundColor: "#000",
+    backgroundColor: "#fff",
     padding: 8,
     borderRadius: 5,
     marginBottom: 5, // Oku ve baloncuğun arasındaki boşluğu ayarlayın
   },
   tooltipText: {
-    color: "#fff",
+    color: "#000",
     fontSize: 12,
   },
   tooltipArrow: {

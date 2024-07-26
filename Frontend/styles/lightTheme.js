@@ -4,7 +4,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#E55E4D",
   },
   input: {
     marginBottom: 16,
@@ -19,7 +19,7 @@ export default StyleSheet.create({
   TasksPage: {
     flex: 1,
     padding: 16,
-    backgroundColor: "white",
+    backgroundColor: "#a7cdbd",
     marginTop: 0,
     marginBottom: 0,
   },
@@ -44,10 +44,10 @@ export default StyleSheet.create({
     overflow: "hidden",
   },
   highPriority: {
-    backgroundColor: "#D2E0FB",
+    backgroundColor: "#FF8878",
   },
   mediumPriority: {
-    backgroundColor: "#F9F3CC",
+    backgroundColor: "#E7DB8E",
   },
   lowPriority: {
     backgroundColor: "#D7E5CA",
@@ -101,7 +101,7 @@ export default StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 80,
+    height: 65,
     backgroundColor: "white", // Temaya göre ayarlayabilirsiniz
   },
 
@@ -110,14 +110,17 @@ export default StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: "#8EACCD",
+    backgroundColor: "#a7cdbd",
+    marginBottom: 5,
+    color: "#fff",
   },
   fabFilter: {
     position: "absolute",
     margin: 16,
     left: 0,
     bottom: 0,
-    backgroundColor: "#8EACCD",
+    marginBottom: 5,
+    backgroundColor: "#a7cdbd",
   },
   messageContainer: {
     flex: 1,
