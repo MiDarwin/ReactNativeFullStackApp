@@ -13,10 +13,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-mongoose.connect("mongodb://localhost:27017/todoapp", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect("mongodb://localhost:27017/todoapp", {});
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import {
   TextInput,
@@ -6,6 +6,9 @@ import {
   Text,
   Divider,
   RadioButton,
+  IconButton,
+  SegmentedButtons,
+  TouchableRipple,
 } from "react-native-paper";
 import axios from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,6 +16,9 @@ import {
   scheduleNotification,
   cancelAllScheduledNotifications,
 } from "./NotificationService";
+import { BackHandler } from "react-native";
+import { ThemeContext } from "../context/ThemeContext";
+import FilterComponent from "./FilterComponent"; // FilterComponent'i import edin
 
 const ChangeTask = ({ route, navigation }) => {
   const { taskId } = route.params;
@@ -21,6 +27,7 @@ const ChangeTask = ({ route, navigation }) => {
   const [priority, setPriority] = useState("");
   const [type, setType] = useState("");
   const [reminderFrequency, setReminderFrequency] = useState("");
+  const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
 
   useEffect(() => {
     const fetchTask = async () => {
@@ -44,7 +51,16 @@ const ChangeTask = ({ route, navigation }) => {
 
     fetchTask();
   }, [taskId]);
-
+  const taskTypes = [
+    { label: "Family", value: "Family", icon: "account-group" },
+    { label: "Lesson", value: "Lesson", icon: "school" },
+    { label: "Job", value: "Job", icon: "briefcase" },
+    { label: "Medical", value: "Medical", icon: "hospital" },
+    { label: "Other", value: "Other", icon: "dots-horizontal" },
+  ];
+  const handleSelectCategory = (category) => {
+    setType(category);
+  };
   const handleUpdateTask = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -72,65 +88,147 @@ const ChangeTask = ({ route, navigation }) => {
       console.error(error);
     }
   };
+  React.useEffect(() => {
+    const backAction = () => {
+      navigation.navigate("Tasks");
+      return true;
+    };
 
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
   return (
-    <View style={styles.container}>
+    <View style={theme.container}>
       <ScrollView>
         <TextInput
           label="Title"
           value={title}
           onChangeText={(text) => setTitle(text)}
-          style={styles.input}
+          style={theme.input}
         />
         <TextInput
           label="Description"
           value={description}
           onChangeText={(text) => setDescription(text)}
-          style={styles.input}
+          style={theme.input}
         />
-        <Text style={styles.label}>Priority</Text>
+        <Text style={theme.label}>Priority</Text>
         <Divider />
-        <RadioButton.Group
-          onValueChange={(value) => setPriority(value)}
+        <SegmentedButtons
           value={priority}
+          onValueChange={(value) => setPriority(value)}
+          buttons={[
+            {
+              value: "Low",
+              label: "Low",
+              icon: "arrow-down-bold",
+              style: {
+                backgroundColor: priority === "Low" ? "#ccffcc" : "gray",
+              },
+            },
+            {
+              value: "Medium",
+              label: "Medium",
+              style: {
+                backgroundColor: priority === "Medium" ? "#ffffcc" : "gray",
+              },
+            },
+            {
+              value: "High",
+              label: "High",
+              icon: "arrow-up-bold",
+              style: {
+                backgroundColor: priority === "High" ? "#ffcccc" : "gray",
+              },
+            },
+          ]}
+        />
+        <Divider />
+        <Text style={theme.label}>Type</Text>
+        <Divider />
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
         >
-          <RadioButton.Item label="High" value="High" />
-          <RadioButton.Item label="Medium" value="Medium" />
-          <RadioButton.Item label="Low" value="Low" />
-        </RadioButton.Group>
+          {taskTypes.map((item) => (
+            <TouchableRipple
+              key={item.value}
+              style={{
+                backgroundColor: type === item.value ? "#FF8878" : "gray",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 100,
+                height: 100,
+                margin: 10,
+                borderRadius: 25,
+              }}
+              onPress={() => handleSelectCategory(item.value)}
+            >
+              <>
+                <IconButton icon={item.icon} size={20} color="white" />
+                <Text style={{ color: "white" }}>{item.label}</Text>
+              </>
+            </TouchableRipple>
+          ))}
+        </View>
         <Divider />
-        <Text style={styles.label}>Type</Text>
+        <Text style={theme.label}>Reminder Frequency</Text>
         <Divider />
-        <RadioButton.Group
-          onValueChange={(value) => setType(value)}
-          value={type}
-        >
-          <RadioButton.Item label="Family" value="Family" />
-          <RadioButton.Item label="Lesson" value="Lesson" />
-          <RadioButton.Item label="Job" value="Job" />
-          <RadioButton.Item label="Medical" value="Medical" />
-          <RadioButton.Item label="Other" value="Other" />
-        </RadioButton.Group>
-        <Divider />
-        <Text style={styles.label}>Reminder Frequency</Text>
-        <Divider />
-        <RadioButton.Group
-          onValueChange={(value) => setReminderFrequency(value)}
+        <SegmentedButtons
           value={reminderFrequency}
-        >
-          <RadioButton.Item label="No Notifications" value="No Notifications" />
-          <RadioButton.Item label="5 minutes" value="5 minutes" />
-          <RadioButton.Item label="30 minutes" value="30 minutes" />
-          <RadioButton.Item label="1 hour" value="1 hour" />
-          <RadioButton.Item label="2 hours" value="2 hours" />
-          <RadioButton.Item label="3 hours" value="3 hours" />
-          <RadioButton.Item label="4 hours" value="4 hours" />
-        </RadioButton.Group>
+          onValueChange={(value) => setReminderFrequency(value)}
+          buttons={[
+            {
+              value: "No Notifications",
+              label: "No Notifications",
+              icon: "bell-off-outline",
+              style: {
+                backgroundColor:
+                  reminderFrequency === "No Notifications" ? "#FF8878" : "gray",
+              },
+            },
+            {
+              value: "5 minutes",
+              label: "5 minutes",
+              icon: "clock",
+              style: {
+                backgroundColor:
+                  reminderFrequency === "5 minutes" ? "#FF8878" : "gray",
+              },
+            },
+            {
+              value: "30 minutes",
+              label: "30 minutes",
+              icon: "clock",
+              style: {
+                backgroundColor:
+                  reminderFrequency === "30 minutes" ? "#FF8878" : "gray",
+              },
+            },
+            {
+              value: "1 hour",
+              label: "1 hour",
+              icon: "clock",
+              style: {
+                backgroundColor:
+                  reminderFrequency === "1 hour" ? "#FF8878" : "gray",
+              },
+            },
+          ]}
+        />
         <Divider />
         <Button
           mode="contained"
           onPress={handleUpdateTask}
-          style={styles.button}
+          style={theme.button}
         >
           Update Task
         </Button>
@@ -138,17 +236,5 @@ const ChangeTask = ({ route, navigation }) => {
     </View>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  input: {
-    marginBottom: 16,
-  },
-  button: {
-    marginTop: 16,
-  },
-});
 
 export default ChangeTask;

@@ -16,6 +16,8 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import RNPickerSelect from "react-native-picker-select";
 import { ThemeContext } from "../context/ThemeContext";
 import Tooltip from "../components/Tooltip";
+import { BackHandler } from "react-native";
+
 const taskTypes = ["Family", "Lesson", "Job", "Medical", "Other"];
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -211,14 +213,14 @@ const Tasks = () => {
             If you do not have an account, you must become a member.
           </Subheading>
           <Button
-            mode="contained"
+            mode="contained-tonal"
             onPress={() => navigation.navigate("Sign Up")}
             style={theme.button}
           >
             Sign Up
           </Button>
           <Button
-            mode="text"
+            mode="contained-tonal"
             onPress={() => navigation.navigate("Login")}
             style={theme.authButton}
           >
@@ -229,12 +231,20 @@ const Tasks = () => {
       {isAuthenticated && (
         <View style={theme.fabContainer}>
           <FAB
+            icon="account"
+            color="black"
+            style={[theme.fabSettings, { color: "#fff" }]}
+            onPress={() => navigation.navigate("Settings")}
+          />
+          <FAB
+            color="black"
             icon="plus"
             style={[theme.fab, { color: "#fff" }]}
             onPress={() => navigation.navigate("Add Task")}
           />
           <FAB
             icon="filter"
+            color="black"
             style={theme.fabFilter}
             onPress={() =>
               navigation.navigate("Filter", {

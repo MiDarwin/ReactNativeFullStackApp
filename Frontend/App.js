@@ -26,6 +26,7 @@ export default function App() {
 
     checkAuthentication();
   }, []);
+
   return (
     <AppThemeProvider>
       <NavigationContainer>
@@ -35,17 +36,47 @@ export default function App() {
             component={SplashScreen}
             options={{
               drawerItemStyle: { display: "none" },
+              headerShown: false,
             }}
           />
-          <Drawer.Screen name="Tasks" component={Tasks} />
-          <Drawer.Screen name="Add Task" component={AddTask} />
-          <Drawer.Screen name="Settings" component={Settings} />
-          <Drawer.Screen name="Filter" component={Filter} />
+          <Drawer.Screen
+            name="Tasks"
+            component={Tasks}
+            options={{
+              title: "Tasks",
+              headerLeft: () => null,
+            }}
+          />
+          <Drawer.Screen
+            name="Add Task"
+            component={AddTask}
+            options={{
+              title: "Add Task",
+              headerLeft: () => null,
+            }}
+          />
+          <Drawer.Screen
+            name="Settings"
+            component={Settings}
+            options={{
+              title: "Settings",
+              headerLeft: () => null,
+            }}
+          />
+          <Drawer.Screen
+            name="Filter"
+            component={Filter}
+            options={{
+              title: "Filter",
+              headerLeft: () => null,
+            }}
+          />
           <Drawer.Screen
             name="Login"
             component={Login}
             options={{
               drawerItemStyle: { display: "none" },
+              headerShown: false,
             }}
           />
           <Drawer.Screen
@@ -53,6 +84,7 @@ export default function App() {
             component={SignUp}
             options={{
               drawerItemStyle: { display: "none" },
+              headerShown: false,
             }}
           />
           <Drawer.Screen
@@ -60,6 +92,7 @@ export default function App() {
             component={ChangeTask}
             options={{
               drawerItemStyle: { display: "none" },
+              headerShown: false,
             }}
           />
         </Drawer.Navigator>

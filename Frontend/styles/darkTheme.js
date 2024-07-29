@@ -4,69 +4,163 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#191919",
+    backgroundColor: "#647a71",
   },
   input: {
     marginBottom: 16,
-    backgroundColor: "#191919",
-    color: "#fff",
+    backgroundColor: "#fff",
+    color: "#000",
   },
   label: {
     marginTop: 16,
     marginBottom: 8,
-    color: "#fff",
+    color: "#000",
+  },
+  TasksPage: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#647a71",
+    marginTop: 0,
+    marginBottom: 0,
   },
   button: {
-    marginTop: 16,
-    backgroundColor: "#bb86fc",
-    color: "#fff",
+    marginTop: 10,
+    backgroundColor: "#FF8878",
   },
-  title: {
-    marginBottom: 30,
-    color: "#fff",
-    backgroundColor: "#191919",
-  },
-  text: {
-    color: "#fff",
-    backgroundColor: "#191919",
+  pickerContainer: {
+    marginBottom: 10,
+    borderWidth: 1,
+    borderRadius: 15,
+    borderColor: "gray",
+    backgroundColor: "#f8f8f8",
+    overflow: "hidden",
   },
   taskContainer: {
-    marginBottom: 16,
-    padding: 16,
+    marginBottom: 5,
+    padding: 0.1,
     borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "#333",
-    backgroundColor: "#222",
+    borderRadius: 15,
+    borderColor: "gray",
+    backgroundColor: "#fff",
+    overflow: "hidden",
   },
-  taskActions: {
+  highPriority: {
+    backgroundColor: "#FF8878",
+  },
+  mediumPriority: {
+    backgroundColor: "#E7DB8E",
+  },
+  lowPriority: {
+    backgroundColor: "#D7E5CA",
+  },
+  taskHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginLeft: 0,
+  },
+  title: {
+    flex: 1,
+  },
+  taskIcon: {
+    marginRight: 5,
+  },
+  taskInfo: {
+    marginLeft: 10,
+    marginBottom: 0,
+  },
+  iconContainer: {
     flexDirection: "row",
     alignItems: "center",
-    position: "absolute",
-    top: 0,
-    right: 0,
-    padding: 8,
+    justifyContent: "flex-end",
   },
+  subheading: {
+    marginBottom: 0,
+  },
+  checkContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 0,
+    marginLeft: 5,
+  },
+  notificationText: {
+    flex: 1,
+    marginRight: 10,
+  },
+  completedText: {
+    color: "green",
+    marginLeft: 10,
+  },
+  fabContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderTopColor: "gray",
+    padding: 10,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 65,
+    backgroundColor: "black", // Temaya göre ayarlayabilirsiniz
+  },
+
   fab: {
+    position: "absolute",
+    margin: 16,
+    right: 135,
+    left: 135,
+    bottom: 0,
+    backgroundColor: "#a7cdbd",
+    marginBottom: 5,
+    color: "#fff",
+  },
+  fabSettings: {
     position: "absolute",
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: "#bb86fc",
+    backgroundColor: "#a7cdbd",
+    marginBottom: 5,
+    color: "#fff",
+  },
+  fabFilter: {
+    position: "absolute",
+    margin: 16,
+    left: 0,
+    bottom: 0,
+    marginBottom: 5,
+    backgroundColor: "#a7cdbd",
   },
   messageContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#a7cdbd",
   },
   authButton: {
     marginTop: 16,
-    backgroundColor: "#bb86fc",
+    backgroundColor: "#ba6054",
+    buttonColor: "white",
   },
-  logoutButton: {
-    marginTop: 16,
-    backgroundColor: "#bb86fc",
+  containerLogin: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#a7cdbd",
   },
-  avatar: {
-    marginBottom: 16,
+  toStyle: {
+    color: "#ba6054", // To için renk
+  },
+  doStyle: {
+    color: "#E7DB8E", // Do için renk
+  },
+  listStyle: {
+    color: "#D7E5CA", // List için renk
+  },
+  titleToDoList: {
+    marginTop: 30,
+    marginBottom: 20,
+    color: "#000",
   },
 });

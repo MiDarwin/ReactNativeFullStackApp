@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import {
   TextInput,
   Button,
   Divider,
   Text,
-  RadioButton,
+  SegmentedButtons,
 } from "react-native-paper";
 import axios from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,13 +13,36 @@ import {
   scheduleNotification,
   cancelAllScheduledNotifications,
 } from "./NotificationService";
+import FilterComponent from "./FilterComponent"; // FilterComponent'i import edin
+import { ThemeContext } from "../context/ThemeContext";
+import { BackHandler } from "react-native";
+
 const AddTask = ({ navigation }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("High");
-  const [type, setType] = useState("Medical");
+  const [priority, setPriority] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [type, setType] = useState("");
+  const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
+
   const [reminderFrequency, setReminderFrequency] =
     useState("No Notifications");
+  const handleSelectCategory = (category) => {
+    setType(category);
+  };
+  React.useEffect(() => {
+    const backAction = () => {
+      navigation.navigate("Tasks");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   const handleAddTask = async () => {
     try {
@@ -49,61 +72,108 @@ const AddTask = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={theme.container}>
       <ScrollView>
         <TextInput
           label="Title"
           value={title}
           onChangeText={setTitle}
-          style={styles.input}
+          style={theme.input}
         />
         <TextInput
           label="Description"
           value={description}
           onChangeText={setDescription}
-          style={styles.input}
+          style={theme.input}
           multiline
         />
-        <Text style={styles.label}>Priority</Text>
+        <Text style={theme.label}>Priority</Text>
         <Divider />
-        <RadioButton.Group
-          onValueChange={(value) => setPriority(value)}
+        <SegmentedButtons
           value={priority}
-        >
-          <RadioButton.Item label="High" value="High" />
-          <RadioButton.Item label="Medium" value="Medium" />
-          <RadioButton.Item label="Low" value="Low" />
-        </RadioButton.Group>
+          onValueChange={(value) => setPriority(value)}
+          buttons={[
+            {
+              value: "Low",
+              label: "Low",
+              icon: "arrow-down-bold",
+              style: {
+                backgroundColor: priority === "Low" ? "#ccffcc" : "gray",
+              },
+            },
+            {
+              value: "Medium",
+              label: "Medium",
+              style: {
+                backgroundColor: priority === "Medium" ? "#ffffcc" : "gray",
+              },
+            },
+            {
+              value: "High",
+              label: "High",
+              icon: "arrow-up-bold",
+              style: {
+                backgroundColor: priority === "High" ? "#ffcccc" : "gray",
+              },
+            },
+          ]}
+        />
+
         <Divider />
-        <Text style={styles.label}>Type</Text>
+        <Text style={theme.label}>Type</Text>
         <Divider />
-        <RadioButton.Group
-          onValueChange={(value) => setType(value)}
-          value={type}
-        >
-          <RadioButton.Item label="Family" value="Family" />
-          <RadioButton.Item label="Lesson" value="Lesson" />
-          <RadioButton.Item label="Job" value="Job" />
-          <RadioButton.Item label="Medical" value="Medical" />
-          <RadioButton.Item label="Other" value="Other" />
-        </RadioButton.Group>
+        <FilterComponent
+          initialSelectedCategory={type}
+          onSelect={handleSelectCategory}
+        />
         <Divider />
-        <Text style={styles.label}>Reminder Frequency</Text>
+        <Text style={theme.label}>Reminder Frequency</Text>
         <Divider />
-        <RadioButton.Group
-          onValueChange={(value) => setReminderFrequency(value)}
+        <SegmentedButtons
           value={reminderFrequency}
-        >
-          <RadioButton.Item label="No Notifications" value="No Notifications" />
-          <RadioButton.Item label="5 minutes" value="5 minutes" />
-          <RadioButton.Item label="30 minutes" value="30 minutes" />
-          <RadioButton.Item label="1 hour" value="1 hour" />
-          <RadioButton.Item label="2 hours" value="2 hours" />
-          <RadioButton.Item label="3 hours" value="3 hours" />
-          <RadioButton.Item label="4 hours" value="4 hours" />
-        </RadioButton.Group>
+          onValueChange={(value) => setReminderFrequency(value)}
+          buttons={[
+            {
+              value: "No Notifications",
+              label: "No Notifications",
+              icon: "bell-off-outline",
+              style: {
+                backgroundColor:
+                  reminderFrequency === "No Notifications" ? "#FF8878" : "gray",
+              },
+            },
+            {
+              value: "5 minutes",
+              label: "5 minutes",
+              icon: "clock",
+              style: {
+                backgroundColor:
+                  reminderFrequency === "5 minutes" ? "#FF8878" : "gray",
+              },
+            },
+            {
+              value: "30 minutes",
+              label: "30 minutes",
+              icon: "clock",
+              style: {
+                backgroundColor:
+                  reminderFrequency === "30 minutes" ? "#FF8878" : "gray",
+              },
+            },
+            {
+              value: "1 hour",
+              label: "1 hour",
+              icon: "clock",
+              style: {
+                backgroundColor:
+                  reminderFrequency === "1 hour" ? "#FF8878" : "gray",
+              },
+            },
+          ]}
+        />
+
         <Divider />
-        <Button mode="contained" onPress={handleAddTask} style={styles.button}>
+        <Button mode="contained" onPress={handleAddTask} style={theme.button}>
           Add Task
         </Button>
       </ScrollView>

@@ -4,7 +4,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#E55E4D",
+    backgroundColor: "#a7cdbd",
   },
   input: {
     marginBottom: 16,
@@ -25,6 +25,7 @@ export default StyleSheet.create({
   },
   button: {
     marginTop: 10,
+    backgroundColor: "#FF8878",
   },
   pickerContainer: {
     marginBottom: 10,
@@ -108,6 +109,16 @@ export default StyleSheet.create({
   fab: {
     position: "absolute",
     margin: 16,
+    right: 135,
+    left: 135,
+    bottom: 0,
+    backgroundColor: "#a7cdbd",
+    marginBottom: 5,
+    color: "#fff",
+  },
+  fabSettings: {
+    position: "absolute",
+    margin: 16,
     right: 0,
     bottom: 0,
     backgroundColor: "#a7cdbd",
@@ -126,9 +137,30 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#a7cdbd",
   },
   authButton: {
     marginTop: 16,
+    backgroundColor: "#FF8878",
+    buttonColor: "white",
+  },
+  containerLogin: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#a7cdbd",
+  },
+  toStyle: {
+    color: "#FF8878", // To için renk
+  },
+  doStyle: {
+    color: "#E7DB8E", // Do için renk
+  },
+  listStyle: {
+    color: "#D7E5CA", // List için renk
+  },
+  titleToDoList: {
+    marginTop: 30,
+    marginBottom: 20,
+    color: "#000",
   },
 });

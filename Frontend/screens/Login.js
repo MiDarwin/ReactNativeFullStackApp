@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { TextInput, Button, Text, Snackbar } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
 import axios from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { BackHandler } from "react-native";
+import { ThemeContext } from "../context/ThemeContext";
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorSnackbar, setErrorSnackbar] = useState(false);
-
+  const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
   const handleLogin = async () => {
     try {
       const response = await axios.post("/login", {
@@ -24,33 +25,51 @@ const Login = ({ navigation }) => {
       setErrorSnackbar(true);
     }
   };
+  React.useEffect(() => {
+    const backAction = () => {
+      // İstediğiniz işlemi buraya yazın, örneğin bir ekrana yönlendirme veya uygulamayı kapatma
+      navigation.navigate("Tasks"); // Örneğin 'Tasks' ekranına dön
+      return true; // Bu, varsayılan geri tuşu davranışını engeller
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
-    <View style={styles.containerLogin}>
-      <Text style={styles.title} variant="displayMedium">
-        Welcome to ToDoList
+    <View style={theme.containerLogin}>
+      <Text style={theme.titleToDoList} variant="displayLarge">
+        <Text style={theme.toStyle}>To</Text>
+        <Text style={theme.doStyle}>Do</Text>
+        <Text style={theme.listStyle}>List</Text>
       </Text>
+
       <TextInput
+        mode="outlined"
         label="Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
-        style={styles.input}
+        style={theme.input}
         autoCapitalize="none"
       />
       <TextInput
         label="Password"
         value={password}
         onChangeText={(text) => setPassword(text)}
-        style={styles.input}
+        style={theme.input}
         secureTextEntry
       />
-      <Button mode="contained" onPress={handleLogin} style={styles.button}>
+      <Button mode="contained" onPress={handleLogin} style={theme.button}>
         Login
       </Button>
       <Button
         mode="contained"
         onPress={() => navigation.navigate("Sign Up")}
-        style={styles.button}
+        style={theme.button}
       >
         Sign Up
       </Button>
@@ -67,25 +86,5 @@ const Login = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  containerLogin: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#E55E4D",
-  },
-  input: {
-    marginBottom: 16,
-    backgroundColor: "#a7cdbd",
-  },
-  button: {
-    marginTop: 16,
-    backgroundColor: "#5CC8FF",
-  },
-  title: {
-    marginBottom: 30,
-    color: "#fff",
-  },
-});
 
 export default Login;

@@ -7,6 +7,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
 import { scheduleNotification } from "./NotificationService"; // NotificationService'i import et
+import { BackHandler } from "react-native";
 
 // First, set the handler that will cause the notification
 // to show the alert
@@ -43,6 +44,21 @@ const Settings = () => {
     );
     console.log("Test bildirimi gönderildi");
   };
+  React.useEffect(() => {
+    const backAction = () => {
+      // İstediğiniz işlemi buraya yazın, örneğin bir ekrana yönlendirme veya uygulamayı kapatma
+      navigation.navigate("Tasks"); // Örneğin 'Tasks' ekranına dön
+      return true; // Bu, varsayılan geri tuşu davranışını engeller
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   const fetchUser = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -94,18 +110,20 @@ const Settings = () => {
         style={styles.avatar}
       />
       <Title>{user.username}</Title>
-      <Subheading style={theme.input}>{user.email}</Subheading>
+      <Subheading style={theme.Text}>{user.email}</Subheading>
       <Button mode="contained" onPress={handleLogout} style={theme.button}>
         Logout
       </Button>
       <Button
         title="Test Bildirimi Gönder"
+        mode="text"
+        style={theme.button}
         onPress={handleSendTestNotification}
       >
         Test Notification
       </Button>
-      <View style={styles.switchContainer}>
-        <Subheading style={theme.input}>Dark Theme</Subheading>
+      <View style={theme.switchContainer}>
+        <Subheading style={theme.Text}>Dark Theme</Subheading>
         <Switch value={isDarkTheme} onValueChange={toggleTheme} />
       </View>
     </View>
@@ -121,6 +139,7 @@ const styles = StyleSheet.create({
   },
   avatar: {
     marginBottom: 16,
+    backgroundColor: "#FF8878",
   },
 });
 

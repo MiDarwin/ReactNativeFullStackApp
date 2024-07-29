@@ -10,7 +10,7 @@ export default function SplashScreen() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate("Login");
+      navigation.navigate("Tasks");
     }, 5000); // 5 saniye sonra Login ekranına geçiş yapar
     return () => clearTimeout(timer);
   }, [navigation]);
@@ -27,7 +27,7 @@ export default function SplashScreen() {
         isLooping={false}
         onPlaybackStatusUpdate={(status) => {
           if (status.didJustFinish) {
-            navigation.navigate("Login");
+            navigation.navigate("Tasks");
           }
         }}
       />
