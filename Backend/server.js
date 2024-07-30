@@ -7,20 +7,29 @@ const Task = require("./models/task");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const auth = require("./middleware/auth");
-
+const dotenv = require("dotenv");
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-
-mongoose.connect("mongodb://localhost:27017/todoapp", {});
+dotenv.config();
+/*mongoose
+  .connect(process.env.MONGODB_URI, {})
+  .then(() => {
+    console.log("Connected to MongoDB Atlas!");
+  })
+  .catch((error) => {
+    console.error("Error connecting to MongoDB Atlas", error);
+  });
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("MongoDB connected successfully");
-});
-
+});*/
+mongoose.connect("mongodb://localhost:27017/todoapp", {});
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
 function makeid(length) {
   let result = "";
   const characters =
@@ -88,6 +97,34 @@ app.get("/me", auth, async (req, res) => {
     res.status(500).send(error);
   }
 });
+//Kullanıcı şifre değiştirme
+app.post("/change-password", auth, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    // Find the user
+    const user = await User.findOne({ userId: req.userId });
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    // Verify the old password
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).send({ error: "Incorrect old password" });
+    }
+
+    // Hash the new password
+    user.password = newPassword; // Don't hash it here
+
+    await user.save();
+
+    res.send({ message: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 // İş ekleme (Add Task)
 app.post("/tasks", auth, async (req, res) => {
   const { title, description, priority, type, reminderFrequency } = req.body;

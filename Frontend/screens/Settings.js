@@ -8,7 +8,8 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
 import { scheduleNotification } from "./NotificationService"; // NotificationService'i import et
 import { BackHandler } from "react-native";
-
+import { useLoading } from "../components/LoadingContext";
+import ChangePassword from "./ChangePassword";
 // First, set the handler that will cause the notification
 // to show the alert
 
@@ -35,6 +36,8 @@ const Settings = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { startLoading, stopLoading } = useLoading();
+
   const handleSendTestNotification = async () => {
     // Test bildirimi ayarla
     await scheduleNotification(
@@ -46,9 +49,8 @@ const Settings = () => {
   };
   React.useEffect(() => {
     const backAction = () => {
-      // İstediğiniz işlemi buraya yazın, örneğin bir ekrana yönlendirme veya uygulamayı kapatma
-      navigation.navigate("Tasks"); // Örneğin 'Tasks' ekranına dön
-      return true; // Bu, varsayılan geri tuşu davranışını engeller
+      navigation.navigate("Tasks");
+      return true;
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -58,7 +60,21 @@ const Settings = () => {
 
     return () => backHandler.remove();
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      startLoading(); // Yüklenme başlaması
+      try {
+        const response = await axios.get("/settings");
+        // Veriyi işleme
+      } catch (error) {
+        console.error(error);
+      } finally {
+        stopLoading(); // Yüklenme tamamlanması
+      }
+    };
 
+    fetchData();
+  }, []);
   const fetchUser = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -67,10 +83,10 @@ const Settings = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      //console.log(response.data);
+      console.log(response.data);
       setUser(response.data);
     } catch (error) {
-      // console.error(error);
+      console.error(error);
     }
   };
 
@@ -96,7 +112,7 @@ const Settings = () => {
       setUser({ username: "", email: "" });
       setEmail("");
       setPassword("");
-      navigation.navigate("Tasks"); // Logout sonrası Tasks ekranına yönlendirme
+      navigation.navigate("Tasks");
     } catch (error) {
       console.error("Error logging out: ", error);
     }
@@ -111,6 +127,13 @@ const Settings = () => {
       />
       <Title>{user.username}</Title>
       <Subheading style={theme.Text}>{user.email}</Subheading>
+      <Button
+        mode="contained"
+        onPress={() => navigation.navigate("ChangePassword")}
+        style={theme.button}
+      >
+        Change Password
+      </Button>
       <Button mode="contained" onPress={handleLogout} style={theme.button}>
         Logout
       </Button>

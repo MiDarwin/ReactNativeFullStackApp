@@ -25,7 +25,7 @@ export default StyleSheet.create({
   },
   button: {
     marginTop: 10,
-    backgroundColor: "#FF8878",
+    backgroundColor: "#a65b51",
   },
   pickerContainer: {
     marginBottom: 10,
@@ -143,6 +143,9 @@ export default StyleSheet.create({
     marginTop: 16,
     backgroundColor: "#ba6054",
     buttonColor: "white",
+  },
+  drawerHeaderBackground: {
+    backgroundColor: "red",
   },
   containerLogin: {
     flex: 1,

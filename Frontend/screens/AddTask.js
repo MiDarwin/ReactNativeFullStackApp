@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, FlatList } from "react-native";
 import {
   TextInput,
   Button,
@@ -88,7 +88,6 @@ const AddTask = ({ navigation }) => {
           multiline
         />
         <Text style={theme.label}>Priority</Text>
-        <Divider />
         <SegmentedButtons
           value={priority}
           onValueChange={(value) => setPriority(value)}
@@ -119,16 +118,15 @@ const AddTask = ({ navigation }) => {
           ]}
         />
 
-        <Divider />
         <Text style={theme.label}>Type</Text>
-        <Divider />
+
         <FilterComponent
           initialSelectedCategory={type}
           onSelect={handleSelectCategory}
         />
-        <Divider />
+
         <Text style={theme.label}>Reminder Frequency</Text>
-        <Divider />
+
         <SegmentedButtons
           value={reminderFrequency}
           onValueChange={(value) => setReminderFrequency(value)}
@@ -172,7 +170,6 @@ const AddTask = ({ navigation }) => {
           ]}
         />
 
-        <Divider />
         <Button mode="contained" onPress={handleAddTask} style={theme.button}>
           Add Task
         </Button>

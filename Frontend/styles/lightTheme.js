@@ -12,7 +12,7 @@ export default StyleSheet.create({
     color: "#000",
   },
   label: {
-    marginTop: 16,
+    marginTop: 2,
     marginBottom: 8,
     color: "#000",
   },
@@ -22,6 +22,10 @@ export default StyleSheet.create({
     backgroundColor: "#a7cdbd",
     marginTop: 0,
     marginBottom: 0,
+  },
+  switchContainer: {
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
   button: {
     marginTop: 10,
