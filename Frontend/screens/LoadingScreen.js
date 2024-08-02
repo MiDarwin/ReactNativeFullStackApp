@@ -1,16 +1,19 @@
 // LoadingScreen.js
-import React from "react";
-import { View, ActivityIndicator, StyleSheet, Modal } from "react-native";
+import React, { useContext } from "react";
+import { View, Text, ActivityIndicator, StyleSheet, Modal } from "react-native";
 import { useLoading } from "../components/LoadingContext";
+import { ThemeContext } from "../context/ThemeContext";
 
 const LoadingScreen = () => {
   const { loading } = useLoading();
+  const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
 
   return (
     <Modal transparent={true} visible={loading} animationType="fade">
-      <View style={styles.container}>
-        <View style={styles.overlay}>
-          <ActivityIndicator size="large" color="#fff" />
+      <View style={theme.containerLoading}>
+        <View style={theme.LoadingOverlay}>
+          <ActivityIndicator size="25" color="#FF8878" />
+          <Text>Loading...</Text>
         </View>
       </View>
     </Modal>

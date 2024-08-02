@@ -6,12 +6,10 @@ import axios from "../api";
 import { ThemeContext } from "../context/ThemeContext";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
-import { scheduleNotification } from "./NotificationService"; // NotificationService'i import et
+import { scheduleNotification } from "./NotificationService";
 import { BackHandler } from "react-native";
 import { useLoading } from "../components/LoadingContext";
 import ChangePassword from "./ChangePassword";
-// First, set the handler that will cause the notification
-// to show the alert
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -20,8 +18,6 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
-// Second, call the method
 
 Notifications.scheduleNotificationAsync({
   content: {
@@ -39,7 +35,6 @@ const Settings = () => {
   const { startLoading, stopLoading } = useLoading();
 
   const handleSendTestNotification = async () => {
-    // Test bildirimi ayarla
     await scheduleNotification(
       "Test Bildirimi",
       "Bu bir test bildirimidir.",
@@ -60,33 +55,23 @@ const Settings = () => {
 
     return () => backHandler.remove();
   }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      startLoading(); // Yüklenme başlaması
-      try {
-        const response = await axios.get("/settings");
-        // Veriyi işleme
-      } catch (error) {
-        console.error(error);
-      } finally {
-        stopLoading(); // Yüklenme tamamlanması
-      }
-    };
 
-    fetchData();
-  }, []);
   const fetchUser = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      const response = await axios.get("/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log(response.data);
-      setUser(response.data);
+      if (token) {
+        const response = await axios.get("/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(response.data);
+        setUser(response.data);
+      } else {
+        console.warn("No token found");
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching user:", error);
     }
   };
 
@@ -95,10 +80,6 @@ const Settings = () => {
       fetchUser();
     }, [])
   );
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
 
   const getInitials = (name) => {
     const names = name.split(" ");
@@ -123,7 +104,7 @@ const Settings = () => {
       <Avatar.Text
         size={64}
         label={getInitials(user.username)}
-        style={styles.avatar}
+        style={theme.avatar}
       />
       <Title>{user.username}</Title>
       <Subheading style={theme.Text}>{user.email}</Subheading>
@@ -152,18 +133,5 @@ const Settings = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-start",
-    marginTop: 10,
-    alignItems: "center",
-  },
-  avatar: {
-    marginBottom: 16,
-    backgroundColor: "#FF8878",
-  },
-});
 
 export default Settings;

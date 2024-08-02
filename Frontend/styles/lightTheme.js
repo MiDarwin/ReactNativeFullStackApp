@@ -6,6 +6,12 @@ export default StyleSheet.create({
     padding: 16,
     backgroundColor: "#a7cdbd",
   },
+  containerLoading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#a7cdbd",
+  },
   input: {
     marginBottom: 16,
     backgroundColor: "#fff",
@@ -15,6 +21,15 @@ export default StyleSheet.create({
     marginTop: 2,
     marginBottom: 8,
     color: "#000",
+  },
+  LoadingOverlay: {
+    width: 100,
+    height: 100,
+    backgroundColor: "#a7cdbd", // Siyah yüklenme efekti
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    opacity: 0.9,
   },
   TasksPage: {
     flex: 1,
@@ -90,6 +105,10 @@ export default StyleSheet.create({
   notificationText: {
     flex: 1,
     marginRight: 10,
+  },
+  avatar: {
+    marginBottom: 16,
+    backgroundColor: "#FF8878",
   },
   completedText: {
     color: "green",

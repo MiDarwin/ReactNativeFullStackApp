@@ -27,16 +27,15 @@ const SignUp = ({ navigation }) => {
         password,
       });
 
-      navigation.navigate("Tasks"); // Örneğin, görevler ekranına yönlendirme
+      navigation.navigate("Tasks");
     } catch (error) {
       console.error(error);
     }
   };
   React.useEffect(() => {
     const backAction = () => {
-      // İstediğiniz işlemi buraya yazın, örneğin bir ekrana yönlendirme veya uygulamayı kapatma
-      navigation.navigate("Tasks"); // Örneğin 'Tasks' ekranına dön
-      return true; // Bu, varsayılan geri tuşu davranışını engeller
+      navigation.navigate("Tasks");
+      return true;
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -50,6 +49,11 @@ const SignUp = ({ navigation }) => {
   const isValidEmail = (email) => {
     return email.endsWith("@gmail.com") || email.endsWith("@hotmail.com");
   };
+  const handleUsernameChange = (text) => {
+    // İlk harfi büyük yapma
+    const formattedText = text.charAt(0).toUpperCase() + text.slice(1);
+    setUsername(formattedText);
+  };
 
   return (
     <View style={theme.container}>
@@ -61,7 +65,7 @@ const SignUp = ({ navigation }) => {
       <TextInput
         label="Username"
         value={username}
-        onChangeText={(text) => setUsername(text)}
+        onChangeText={handleUsernameChange}
         style={theme.input}
         autoCapitalize="none"
       />
