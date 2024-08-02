@@ -186,4 +186,36 @@ export default StyleSheet.create({
     marginBottom: 20,
     color: "#000",
   },
+  containerFilter: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#f5f5f5",
+  },
+  typeContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 100,
+    height: 100,
+    margin: 10,
+    borderRadius: 25,
+  },
+  typeLabel: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  typeContainerColorSelected: "#a7cdbd",
+  typeContainerColorDefault: "gray",
+  applyButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#a7cdbd",
+    borderRadius: 10,
+  },
+  applyButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
 });

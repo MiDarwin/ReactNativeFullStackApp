@@ -30,35 +30,35 @@ const FilterComponent = ({ initialSelectedCategory = "", onSelect }) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={taskTypes}
-        numColumns={2}
-        keyExtractor={(item) => item.value}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[
-              styles.typeContainer,
-              {
-                backgroundColor:
-                  selectedCategory === item.value ? "#FF8878" : "gray",
-              },
-            ]}
-            onPress={() => selectCategory(item.value)}
-          >
-            <IconButton icon={item.icon} size={30} color="white" />
-            <Text style={styles.typeLabel}>{item.label}</Text>
-          </TouchableOpacity>
-        )}
-      />
+      {taskTypes.map((item) => (
+        <TouchableOpacity
+          key={item.value}
+          numColumns={2}
+          style={[
+            styles.typeContainer,
+            {
+              backgroundColor:
+                selectedCategory === item.value ? "#FF8878" : "gray",
+            },
+          ]}
+          onPress={() => selectCategory(item.value)}
+        >
+          <IconButton icon={item.icon} size={30} color="white" />
+          <Text style={styles.typeLabel}>{item.label}</Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
+
+    justifyContent: "space-between",
     alignItems: "center",
-    padding: 20,
+    padding: 10,
     backgroundColor: "#a7cdbd",
   },
   typeContainer: {

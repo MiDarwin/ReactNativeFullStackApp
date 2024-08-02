@@ -8,6 +8,7 @@ const taskSchema = new mongoose.Schema(
     priority: String,
     type: String,
     reminderFrequency: { type: String, default: "No Notifications" },
+    completed: { type: Boolean, default: "false" },
     userId: { type: String, required: true }, // String tipinde olduğundan emin olun
   },
   {

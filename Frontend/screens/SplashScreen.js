@@ -8,13 +8,6 @@ export default function SplashScreen() {
   const video = useRef(null);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      navigation.navigate("Tasks");
-    }, 5000); // 5 saniye sonra Login ekranına geçiş yapar
-    return () => clearTimeout(timer);
-  }, [navigation]);
-
   return (
     <View style={styles.container}>
       <Video

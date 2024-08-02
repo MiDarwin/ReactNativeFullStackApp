@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -8,9 +8,11 @@ import {
 } from "react-native";
 import { IconButton } from "react-native-paper";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Filter = () => {
   const navigation = useNavigation();
+  const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
   const route = useRoute();
   const { selectedCategories: initialSelectedCategories, onSave } =
     route.params;
@@ -43,7 +45,7 @@ const Filter = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={theme.containerFilter}>
       <FlatList
         data={taskTypes}
         numColumns={2}
@@ -51,29 +53,29 @@ const Filter = () => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={[
-              styles.typeContainer,
+              theme.typeContainer,
               {
                 backgroundColor: selectedCategories.includes(item.value)
-                  ? "#a7cdbd"
-                  : "gray",
+                  ? theme.typeContainerColorSelected
+                  : theme.typeContainerColorDefault,
               },
             ]}
             onPress={() => toggleCategory(item.value)}
           >
             <IconButton icon={item.icon} size={30} color="white" />
-            <Text style={styles.typeLabel}>{item.label}</Text>
+            <Text style={theme.typeLabel}>{item.label}</Text>
           </TouchableOpacity>
         )}
       />
-      <TouchableOpacity style={styles.applyButton} onPress={handleSave}>
-        <Text style={styles.applyButtonText}>Apply Filters</Text>
+      <TouchableOpacity style={theme.applyButton} onPress={handleSave}>
+        <Text style={theme.applyButtonText}>Apply Filters</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  containerFilter: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",

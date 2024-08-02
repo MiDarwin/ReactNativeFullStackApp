@@ -210,16 +210,18 @@ app.put("/tasks/:id", auth, async (req, res) => {
   }
 
   try {
-    const task = await Task.findById(req.params.id);
+    const task = await Task.findOne({ _id: req.params.id, userId: req.userId });
+
     if (!task) {
-      return res.status(404).send({ error: "Task not found" });
+      return res.status(404).send();
     }
 
-    updates.forEach((update) => (task[update] = req.body[update]));
+    task.completed = false;
+
     await task.save();
     res.send(task);
-  } catch (err) {
-    res.status(400).send(err);
+  } catch (e) {
+    res.status(400).send(e);
   }
 });
 

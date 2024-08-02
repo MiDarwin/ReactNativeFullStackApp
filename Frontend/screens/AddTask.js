@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, StyleSheet, ScrollView, FlatList } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import {
   TextInput,
   Button,
@@ -13,7 +13,7 @@ import {
   scheduleNotification,
   cancelAllScheduledNotifications,
 } from "./NotificationService";
-import FilterComponent from "./FilterComponent"; // FilterComponent'i import edin
+import FilterComponent from "./FilterComponent";
 import { ThemeContext } from "../context/ThemeContext";
 import { BackHandler } from "react-native";
 

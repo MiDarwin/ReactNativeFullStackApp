@@ -1,15 +1,17 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 
+// Context ve Provider oluşturma
 const FilterContext = createContext();
 
 export const FilterProvider = ({ children }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [onSave, setOnSave] = useState(() => () => {});
+
+  const saveCategories = (categories) => {
+    setSelectedCategories(categories);
+  };
 
   return (
-    <FilterContext.Provider
-      value={{ selectedCategories, setSelectedCategories, onSave, setOnSave }}
-    >
+    <FilterContext.Provider value={{ selectedCategories, saveCategories }}>
       {children}
     </FilterContext.Provider>
   );
