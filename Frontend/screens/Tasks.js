@@ -18,7 +18,16 @@ import { ThemeContext } from "../context/ThemeContext";
 import Tooltip from "../components/Tooltip";
 import { BackHandler } from "react-native";
 
-const taskTypes = ["Family", "Lesson", "Job", "Medical", "Other"];
+const taskTypes = [
+  "Shopping",
+  "Family",
+  "Exercise",
+  "Medical",
+  "Lesson",
+  "Job",
+  "Medical",
+  "Other",
+];
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -120,6 +129,10 @@ const Tasks = () => {
         return "school";
       case "Job":
         return "briefcase";
+      case "Shopping":
+        return "cart";
+      case "Exercise":
+        return "dumbbell";
       case "Medical":
         return "hospital";
       case "Other":
@@ -195,6 +208,7 @@ const Tasks = () => {
                         handleCompleteTask(task._id);
                       }}
                       uncheckedColor="gray"
+                      color="#a7cdbd"
                     />
                     {isTaskCompleted(task._id) && showTooltip[task._id] && (
                       <Tooltip visible={showTooltip[task._id]}>
@@ -258,38 +272,5 @@ const Tasks = () => {
     </View>
   );
 };
-const styles = StyleSheet.create({
-  filterButtonContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    padding: 10,
-  },
-  // Diğer stiller buraya eklenebilir
-});
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 0,
-    borderRadius: 15,
-    color: "black",
-    paddingRight: 30,
-    backgroundColor: "white",
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0,
-    borderRadius: 15,
-    color: "black",
-    paddingRight: 30,
-    backgroundColor: "white",
-  },
-  placeholder: {
-    color: "gray",
-  },
-});
 
 export default Tasks;

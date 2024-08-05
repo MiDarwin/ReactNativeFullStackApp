@@ -9,6 +9,7 @@ import {
 import { IconButton } from "react-native-paper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { ThemeContext } from "../context/ThemeContext";
+import { BackHandler } from "react-native";
 
 const Filter = () => {
   const navigation = useNavigation();
@@ -25,6 +26,8 @@ const Filter = () => {
     { label: "Family", value: "Family", icon: "account-group" },
     { label: "Lesson", value: "Lesson", icon: "school" },
     { label: "Job", value: "Job", icon: "briefcase" },
+    { label: "Shopping ", value: "Shopping", icon: "cart" },
+    { label: "Exercise ", value: "Exercise", icon: "dumbbell" },
     { label: "Medical", value: "Medical", icon: "hospital" },
     { label: "Other", value: "Other", icon: "dots-horizontal" },
   ];
@@ -38,7 +41,19 @@ const Filter = () => {
       setSelectedCategories([...selectedCategories, category]);
     }
   };
+  React.useEffect(() => {
+    const backAction = () => {
+      navigation.navigate("Tasks");
+      return true;
+    };
 
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
   const handleSave = () => {
     onSave(selectedCategories);
     navigation.navigate("Tasks");
@@ -73,38 +88,5 @@ const Filter = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  containerFilter: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "#f5f5f5",
-  },
-  typeContainer: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 100,
-    height: 100,
-    margin: 10,
-    borderRadius: 25,
-  },
-  typeLabel: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  applyButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: "#a7cdbd",
-    borderRadius: 10,
-  },
-  applyButtonText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-});
 
 export default Filter;

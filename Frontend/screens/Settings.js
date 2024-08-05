@@ -120,7 +120,7 @@ const Settings = () => {
       </Button>
       <Button
         title="Test Bildirimi Gönder"
-        mode="text"
+        mode="contained"
         style={theme.button}
         onPress={handleSendTestNotification}
       >
@@ -128,7 +128,11 @@ const Settings = () => {
       </Button>
       <View style={theme.switchContainer}>
         <Subheading style={theme.Text}>Dark Theme</Subheading>
-        <Switch value={isDarkTheme} onValueChange={toggleTheme} />
+        <Switch
+          color="#96483e"
+          value={isDarkTheme}
+          onValueChange={toggleTheme}
+        />
       </View>
     </View>
   );

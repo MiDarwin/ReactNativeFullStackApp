@@ -1,5 +1,5 @@
 // FilterComponent.js
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -9,16 +9,20 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { IconButton } from "react-native-paper";
+import { ThemeContext } from "../context/ThemeContext";
 
 const FilterComponent = ({ initialSelectedCategory = "", onSelect }) => {
   const [selectedCategory, setSelectedCategory] = useState(
     initialSelectedCategory
   );
+  const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
 
   const taskTypes = [
     { label: "Family", value: "Family", icon: "account-group" },
     { label: "Lesson", value: "Lesson", icon: "school" },
     { label: "Job", value: "Job", icon: "briefcase" },
+    { label: "Shopping ", value: "Shopping", icon: "cart" },
+    { label: "Exercise ", value: "Exercise ", icon: "dumbbell" },
     { label: "Medical", value: "Medical", icon: "hospital" },
     { label: "Other", value: "Other", icon: "dots-horizontal" },
   ];
@@ -29,13 +33,13 @@ const FilterComponent = ({ initialSelectedCategory = "", onSelect }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={theme.containerFilterComponent}>
       {taskTypes.map((item) => (
         <TouchableOpacity
           key={item.value}
           numColumns={2}
           style={[
-            styles.typeContainer,
+            theme.typeContainer,
             {
               backgroundColor:
                 selectedCategory === item.value ? "#FF8878" : "gray",
@@ -44,46 +48,11 @@ const FilterComponent = ({ initialSelectedCategory = "", onSelect }) => {
           onPress={() => selectCategory(item.value)}
         >
           <IconButton icon={item.icon} size={30} color="white" />
-          <Text style={styles.typeLabel}>{item.label}</Text>
+          <Text style={theme.typeLabel}>{item.label}</Text>
         </TouchableOpacity>
       ))}
     </View>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-    backgroundColor: "#a7cdbd",
-  },
-  typeContainer: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 100,
-    height: 100,
-    margin: 10,
-    borderRadius: 25,
-  },
-  typeLabel: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  applyButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: "#a7cdbd",
-    borderRadius: 10,
-  },
-  applyButtonText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-});
 
 export default FilterComponent;

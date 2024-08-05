@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-
+import { Dimensions, StyleSheet } from "react-native";
+const { width, height } = Dimensions.get("window");
 export default StyleSheet.create({
   container: {
     flex: 1,
@@ -131,13 +131,18 @@ export default StyleSheet.create({
 
   fab: {
     position: "absolute",
-    margin: 16,
-    right: 135,
-    left: 135,
-    bottom: 0,
+    right: width * 0.42,
+    bottom: 4,
     backgroundColor: "#7e9c8f",
-    marginBottom: 5,
+    marginBottom: 0,
     color: "#fff",
+    alignSelf: "center",
+    borderRadius: 30, // Daire formunda olması için
+    elevation: 8, // Android'de gölge efekti için
+    shadowColor: "#000", // iOS'ta gölge efekti için
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
   fabSettings: {
     position: "absolute",
@@ -207,16 +212,59 @@ export default StyleSheet.create({
     color: "black",
     fontWeight: "bold",
   },
+  containerFilterComponent: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: "#647a71",
+  },
   applyButton: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: "#7e9c8f",
+    backgroundColor: "#5e8a72",
     borderRadius: 10,
   },
   applyButtonText: {
     color: "white",
     fontWeight: "bold",
   },
+  tooltipContainer: {
+    position: "absolute",
+    backgroundColor: "transparent",
+    alignItems: "center",
+    right: 10, // Sağdan 10 birim mesafe
+    bottom: 40, // Alttan 10 birim mesafe
+  },
+  tooltipBubble: {
+    backgroundColor: "#7d7d7d",
+    padding: 8,
+    borderRadius: 5,
+    marginBottom: 5, // Oku ve baloncuğun arasındaki boşluğu ayarlayın
+  },
+  tooltipText: {
+    color: "#fff",
+    fontSize: 12,
+  },
+  tooltipArrow: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderTopWidth: 5,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderTopColor: "#000",
+    position: "absolute",
+    top: "100%", // Oku baloncuğun altına hizalar
+    left: "90%", // Oku ortalar
+    marginLeft: -5, // Oku tam ortalamak için
+  },
   typeContainerColorSelected: "#5e8a72",
   typeContainerColorDefault: "#333",
+  notificationColorSelected: "#a65b51",
+  notificationColorDefault: "gray",
 });

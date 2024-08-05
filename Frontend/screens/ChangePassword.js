@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Alert } from "react-native";
-import { TextInput, Button, useTheme } from "react-native-paper";
+import { TextInput, Button, useTheme, Text } from "react-native-paper";
 import axios from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useLoading from "../components/LoadingContext"; // Adjust the path as necessary
+import { ThemeContext } from "../context/ThemeContext";
 
 const ChangePassword = ({ navigation }) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const { colors } = useTheme();
+  const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem("token");
 
+      navigation.navigate("Tasks");
+    } catch (error) {
+      console.error("Error logging out: ", error);
+    }
+  };
   const handleChangePassword = async () => {
     if (!oldPassword || !newPassword) {
       Alert.alert("Error", "Both fields are required");
@@ -30,6 +40,7 @@ const ChangePassword = ({ navigation }) => {
       Alert.alert("Success", "Password changed successfully");
       setOldPassword("");
       setNewPassword("");
+      handleLogout();
     } catch (error) {
       console.error("Error changing password: ", error);
       Alert.alert("Error", "Failed to change password");
@@ -38,14 +49,19 @@ const ChangePassword = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, padding: 16, backgroundColor: colors.background }}>
+    <View style={theme.container}>
+      <Text style={theme.titleToDoList} variant="displayLarge">
+        <Text style={theme.toStyle}>To</Text>
+        <Text style={theme.doStyle}>Do</Text>
+        <Text style={theme.listStyle}>List</Text>
+      </Text>
       <TextInput
         label="Old Password"
         mode="outlined"
         secureTextEntry
         value={oldPassword}
         onChangeText={setOldPassword}
-        style={{ marginBottom: 16 }}
+        style={theme.input}
       />
       <TextInput
         label="New Password"
@@ -53,12 +69,12 @@ const ChangePassword = ({ navigation }) => {
         secureTextEntry
         value={newPassword}
         onChangeText={setNewPassword}
-        style={{ marginBottom: 16 }}
+        style={theme.input}
       />
       <Button
         mode="contained"
         onPress={handleChangePassword}
-        style={{ marginTop: 16 }}
+        style={theme.button}
       >
         Change Password
       </Button>

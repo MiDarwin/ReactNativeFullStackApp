@@ -1,52 +1,22 @@
 // components/Tooltip.js
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Tooltip = ({ children, visible }) => {
   if (!visible) return null;
+  const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
 
   return (
-    <View style={styles.tooltipContainer}>
-      <View style={styles.tooltipArrow} />
-      <View style={styles.tooltipBubble}>
-        <Text style={styles.tooltipText}>{children}</Text>
+    <View style={theme.tooltipContainer}>
+      <View style={theme.tooltipArrow} />
+      <View style={theme.tooltipBubble}>
+        <Text style={theme.tooltipText}>{children}</Text>
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  tooltipContainer: {
-    position: "absolute",
-    backgroundColor: "transparent",
-    alignItems: "center",
-    right: 10, // Sağdan 10 birim mesafe
-    bottom: 40, // Alttan 10 birim mesafe
-  },
-  tooltipBubble: {
-    backgroundColor: "#fff",
-    padding: 8,
-    borderRadius: 5,
-    marginBottom: 5, // Oku ve baloncuğun arasındaki boşluğu ayarlayın
-  },
-  tooltipText: {
-    color: "#000",
-    fontSize: 12,
-  },
-  tooltipArrow: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 5,
-    borderRightWidth: 5,
-    borderTopWidth: 5,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderTopColor: "#000",
-    position: "absolute",
-    top: "100%", // Oku baloncuğun altına hizalar
-    left: "90%", // Oku ortalar
-    marginLeft: -5, // Oku tam ortalamak için
-  },
-});
+const styles = StyleSheet.create({});
 
 export default Tooltip;

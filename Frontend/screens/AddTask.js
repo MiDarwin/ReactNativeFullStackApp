@@ -137,7 +137,9 @@ const AddTask = ({ navigation }) => {
               icon: "bell-off-outline",
               style: {
                 backgroundColor:
-                  reminderFrequency === "No Notifications" ? "#FF8878" : "gray",
+                  reminderFrequency === "No Notifications"
+                    ? theme.notificationColorSelected
+                    : "gray",
               },
             },
             {
@@ -177,22 +179,5 @@ const AddTask = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  input: {
-    marginBottom: 16,
-  },
-  label: {
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  button: {
-    marginTop: 16,
-  },
-});
 
 export default AddTask;

@@ -55,6 +55,8 @@ const ChangeTask = ({ route, navigation }) => {
     { label: "Family", value: "Family", icon: "account-group" },
     { label: "Lesson", value: "Lesson", icon: "school" },
     { label: "Job", value: "Job", icon: "briefcase" },
+    { label: "Shopping ", value: "Shopping", icon: "cart" },
+    { label: "Exercise ", value: "Exercise", icon: "dumbbell" },
     { label: "Medical", value: "Medical", icon: "hospital" },
     { label: "Other", value: "Other", icon: "dots-horizontal" },
   ];

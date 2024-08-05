@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+const { width, height } = Dimensions.get("window");
 
 export default StyleSheet.create({
   container: {
@@ -131,13 +132,17 @@ export default StyleSheet.create({
 
   fab: {
     position: "absolute",
-    margin: 16,
-    right: 135,
-    left: 135,
-    bottom: 0,
+    right: width * 0.42,
+    bottom: 4,
     backgroundColor: "#a7cdbd",
-    marginBottom: 5,
     color: "#fff",
+    alignSelf: "center",
+    borderRadius: 30, // Daire formunda olması için
+    elevation: 8, // Android'de gölge efekti için
+    shadowColor: "#000", // iOS'ta gölge efekti için
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
   fabSettings: {
     position: "absolute",
@@ -214,8 +219,54 @@ export default StyleSheet.create({
     backgroundColor: "#a7cdbd",
     borderRadius: 10,
   },
+  containerFilterComponent: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: "#a7cdbd",
+  },
+
   applyButtonText: {
     color: "white",
     fontWeight: "bold",
   },
+  tooltipContainer: {
+    position: "absolute",
+    backgroundColor: "transparent",
+    alignItems: "center",
+    right: 10, // Sağdan 10 birim mesafe
+    bottom: 40, // Alttan 10 birim mesafe
+  },
+  tooltipBubble: {
+    backgroundColor: "#fff",
+    padding: 8,
+    borderRadius: 5,
+    marginBottom: 5, // Oku ve baloncuğun arasındaki boşluğu ayarlayın
+  },
+  tooltipText: {
+    color: "#000",
+    fontSize: 12,
+  },
+  tooltipArrow: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderTopWidth: 5,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderTopColor: "#000",
+    position: "absolute",
+    top: "100%", // Oku baloncuğun altına hizalar
+    left: "90%", // Oku ortalar
+    marginLeft: -5, // Oku tam ortalamak için
+  },
+  typeContainerColorSelected: "#FF8878",
+  typeContainerColorDefault: "#333",
+  notificationColorSelected: "#FF8878",
+  notificationColorDefault: "gray",
 });
