@@ -190,7 +190,36 @@ app.get("/tasks/:id", auth, async (req, res) => {
     res.status(400).send(err);
   }
 });
+//Belirli bir ID'ye sahip görevi tamamlanma durumunu güncelleme
+app.put("/tasks/:id/complete", auth, async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["completed"];
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
 
+  if (!isValidOperation) {
+    return res.status(400).send({ error: "Invalid updates!" });
+  }
+
+  try {
+    // Görevi ID ve kullanıcıya göre bul
+    const task = await Task.findOne({ _id: req.params.id, userId: req.userId });
+
+    if (!task) {
+      return res.status(404).send({ error: "Task not found!" });
+    }
+
+    // `completed` alanını güncelle
+    task.completed = req.body.completed;
+
+    // Görevi kaydet
+    await task.save();
+    res.send(task);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
 // Belirli bir ID'ye sahip görevi güncellemek (Update Task by ID)
 app.put("/tasks/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);

@@ -84,29 +84,47 @@ const Tasks = () => {
       : tasks;
 
   const handleCompleteTask = async (taskId) => {
-    setCompletedTasks((prevCompletedTasks) => {
-      if (prevCompletedTasks.includes(taskId)) {
-        return prevCompletedTasks.filter((id) => id !== taskId);
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      if (token) {
+        const task = tasks.find((task) => task._id === taskId);
+        const newCompletedStatus = !task.completed;
+
+        await axios.put(
+          `/tasks/${taskId}/complete`,
+          { completed: newCompletedStatus },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        fetchTasks();
+
+        // Eğer görev tamamlandıysa tooltip'i göster
+        if (newCompletedStatus) {
+          setShowTooltip((prevShowTooltip) => ({
+            ...prevShowTooltip,
+            [taskId]: true,
+          }));
+
+          // Tooltip'i 2 saniye sonra gizle
+          setTimeout(() => {
+            setShowTooltip((prevShowTooltip) => ({
+              ...prevShowTooltip,
+              [taskId]: false,
+            }));
+          }, 2000);
+        }
       } else {
-        return [...prevCompletedTasks, taskId];
+        console.error("No token found");
       }
-    });
-
-    setShowTooltip((prevShowTooltip) => ({
-      ...prevShowTooltip,
-      [taskId]: true,
-    }));
-
-    // Show tooltip for 2 seconds
-    setTimeout(() => {
-      setShowTooltip((prevShowTooltip) => ({
-        ...prevShowTooltip,
-        [taskId]: false,
-      }));
-    }, 2000);
+    } catch (error) {
+      console.error("Error updating task completion:", error);
+    }
   };
-
-  const isTaskCompleted = (taskId) => completedTasks.includes(taskId);
 
   const getTaskContainerStyle = (priority) => {
     switch (priority) {
@@ -166,6 +184,7 @@ const Tasks = () => {
                       style={theme.taskIcon}
                     />
                     <Title style={theme.title}>{task.title}</Title>
+
                     <View style={theme.iconContainer}>
                       <IconButton
                         icon="pencil"
@@ -200,17 +219,14 @@ const Tasks = () => {
                     <Text style={theme.notificationText}>
                       Notifications: {task.reminderFrequency}
                     </Text>
+
                     <Checkbox
-                      status={
-                        isTaskCompleted(task._id) ? "checked" : "unchecked"
-                      }
-                      onPress={() => {
-                        handleCompleteTask(task._id);
-                      }}
+                      status={task.completed ? "checked" : "unchecked"}
+                      onPress={() => handleCompleteTask(task._id)} // Task ID'yi burada kullanıyoruz
                       uncheckedColor="gray"
                       color="#a7cdbd"
                     />
-                    {isTaskCompleted(task._id) && showTooltip[task._id] && (
+                    {task.completed && showTooltip[task._id] && (
                       <Tooltip visible={showTooltip[task._id]}>
                         Completed
                       </Tooltip>
