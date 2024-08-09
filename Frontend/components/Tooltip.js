@@ -4,9 +4,8 @@ import { View, Text, StyleSheet } from "react-native";
 import { ThemeContext } from "../context/ThemeContext";
 
 const Tooltip = ({ children, visible }) => {
-  if (!visible) return null;
   const { isDarkTheme, toggleTheme, theme } = useContext(ThemeContext);
-
+  if (!visible) return null;
   return (
     <View style={theme.tooltipContainer}>
       <View style={theme.tooltipArrow} />
